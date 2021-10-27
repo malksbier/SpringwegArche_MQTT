@@ -1,4 +1,4 @@
-package de.springwegarche.webpage.Repositories;
+package de.springwegarche.webpage.Models.Repositories;
 
 import de.springwegarche.webpage.Models.*;
 import org.springframework.data.jpa.repository.JpaRepository;

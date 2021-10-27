@@ -1,21 +1,32 @@
 package de.springwegarche.webpage.Models;
 
+import java.util.Collection;
 import java.util.Objects;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Inheritance(strategy = InheritanceType.JOINED)
+public class User implements UserDetails{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String username;
     private String password;
+    private String username;
 
 
     public User() {
@@ -26,9 +37,13 @@ public class User {
         this.username = username;
         this.password = password;
     }
+    public User(String username, String password) {
+        this.id = 0;
+        this.username = username;
+        this.password = password;
+    }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
     public long getId() {
         return this.id;
     }
@@ -93,6 +108,36 @@ public class User {
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +
             "}";
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        // TODO Auto-generated method stub
+        return true;
     }
 
 }

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.springwegarche.webpage.Models.User;
-import de.springwegarche.webpage.Repositories.*;
+import de.springwegarche.webpage.Models.Repositories.UserRepository;
 
 @RestController
 @RequestMapping("/api/user")

@@ -1,15 +1,15 @@
 package de.springwegarche.webpage.Controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
 public class SecurityDemoController {
-    @RequestMapping({"/hello"})
+    @GetMapping({"/hello"})
     public String hello() {
         return "Hello";
     }
-    @RequestMapping({"/helloSecure"})
+    @GetMapping({"/helloSecure"})
     public String helloSecure() {
         return "Hello sicher";
     }

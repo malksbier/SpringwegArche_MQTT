@@ -35,9 +35,16 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().
         authorizeRequests().
+        // ALL AVLIABLE
         antMatchers("/").permitAll().
         antMatchers("/login/**").permitAll().
+        // vue stuff
+        antMatchers("/css/**").permitAll().
+        antMatchers("/js/**").permitAll().
+        antMatchers("/img/**").permitAll().
+        antMatchers("/favicon.ico").permitAll().
 
+        // ALL AUTHENTICATED
         anyRequest().authenticated()
         .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

@@ -18,13 +18,13 @@ import de.springwegarche.webpage.Controller.Services.UserDetailsServiceImpl;
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsServiceImpl userService;
+    private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService);
+        auth.userDetailsService(userDetailsService);
     }
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,7 +34,9 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().
-        authorizeRequests().antMatchers("/login/autheticate").permitAll().
+        authorizeRequests().
+        antMatchers("/login/autheticate").permitAll().
+        antMatchers("/login/register").permitAll().
         anyRequest().authenticated()
         .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -46,5 +48,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
+
+
 	}
 }

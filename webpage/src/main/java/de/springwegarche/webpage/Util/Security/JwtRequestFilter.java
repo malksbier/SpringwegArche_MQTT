@@ -19,6 +19,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 
 @Component
@@ -46,15 +48,27 @@ public class JwtRequestFilter extends OncePerRequestFilter{
                 // JWT Token and User are Valid?
                 final UserDetails userDetails = this.userService.loadUserByUsername(username);
 
-            
+                if(userDetails == null) {
+                    throw new IllegalArgumentException("wrong username");
+                }
                 if(jwtUtil.validateToken(jwt, userDetails)) {
                     UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(token);
                 } 
             } 
-        } catch (SignatureException e) {
+        } catch (SignatureException  e) {
             response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.setHeader("Error", "false token");
+        } catch (MalformedJwtException e) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.setHeader("Error", "false token");
+        } catch (ExpiredJwtException e) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.setHeader("Error", "token expired");
+        } catch (IllegalArgumentException e) {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.setHeader("Error", "no_username_found");
         }
         filterChain.doFilter(request, response);
     }

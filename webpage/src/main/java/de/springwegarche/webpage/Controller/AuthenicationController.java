@@ -1,10 +1,12 @@
 package de.springwegarche.webpage.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,9 +15,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.springwegarche.webpage.Controller.Services.UserDetailsServiceImpl;
+import de.springwegarche.webpage.Models.User;
 import de.springwegarche.webpage.Models.DAO.AuthenticationRequest;
 import de.springwegarche.webpage.Models.DAO.AuthenticationResponse;
+import de.springwegarche.webpage.Models.DAO.RegisterRequest;
+import de.springwegarche.webpage.Util.WebResponses;
 import de.springwegarche.webpage.Util.Security.JwtUtil;
+import de.springwegarche.webpage.Util.Security.SqlInjectionChecker;
 
 @RestController
 public class AuthenicationController {
@@ -33,13 +39,46 @@ public class AuthenicationController {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
         } catch (AuthenticationException e) {
-            throw new Exception("Incorrect username or password");
+            return WebResponses.badResponse("username_or_pawword_wrong");
         }
+        String jwtToken = null;
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        if(userDetails != null) {
+            jwtToken = jwtUtil.generateToken(userDetails);
+        } else {
+            return WebResponses.badResponse("username_wrong");
+        }
+        if(jwtToken != null && jwtToken != "") {
+            jwtToken = "Bearer " + jwtToken;
+            return WebResponses.okResponse(new AuthenticationResponse(jwtToken).toString());
+        }
 
-        final String jwtToken = jwtUtil.generateToken(userDetails);
+        return WebResponses.internalServerErrorResponse("could not generate Token");
+    }
 
-        return ResponseEntity.ok(new AuthenticationResponse(jwtToken));
+    @RequestMapping(value = mainRoute + "/register", method = RequestMethod.POST)
+    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) throws Exception {
+        // check if user exists
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(registerRequest.getUsername());
+        if(userDetails != null) {
+            return WebResponses.conflictResponse("username_allready_exists");
+        }
 
+        // Check validity of User;
+        if(registerRequest.getUsername().length() <= 5) {
+            return WebResponses.badResponse("username_has_to_be_six_chars_long");
+        }
+        if(registerRequest.getPassword().length() <= 5) {
+            return WebResponses.badResponse("password_has_to_be_six_chars_long");
+        }
+        if(SqlInjectionChecker.isSafe(registerRequest.getUsername()) == false) {
+            return WebResponses.badResponse("password_has_invalid_chars");
+        }
+
+        final User user = new User(registerRequest.getUsername(),registerRequest.getUsername());
+        // create User
+        userDetailsService.addUser(user);
+
+        return WebResponses.okResponse("UserCreated");
     }
 }

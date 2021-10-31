@@ -9,7 +9,7 @@ public class SecurityDemoController {
     public String hello() {
         return "Hello";
     }
-    @GetMapping({"/helloSecure"})
+    @GetMapping({"/api/helloSecure"})
     public String helloSecure() {
         return "Hello sicher";
     }

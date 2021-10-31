@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-import PageNotFound from '../views/PageNotFound.vue'
 
 Vue.use(VueRouter)
 
@@ -24,7 +23,7 @@ const routes = [
     path: '*',
     name: 'page_not_found',
     
-    component: PageNotFound
+    component: () => import('../views/PageNotFound.vue')
   }
 ]
 

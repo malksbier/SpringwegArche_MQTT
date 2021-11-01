@@ -1,9 +1,10 @@
 
 <template>
   <v-app>
-    <v-app-bar
-      app color="primary" dark>
-
+    <v-app-bar v-if="displayAppBar"
+      app color="primary" elevation="7">
+      
+      
       <language-switcher></language-switcher>
     </v-app-bar>
 
@@ -22,7 +23,7 @@ export default {
   name: 'App',
 
   data: () => ({
-    //
+    displayAppBar : true,
   }),
 
   created() {

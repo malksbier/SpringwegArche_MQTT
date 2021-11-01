@@ -1,3 +1,4 @@
+
 <template>
   <v-app>
     <v-app-bar
@@ -19,5 +20,20 @@ export default {
   data: () => ({
     //
   }),
+
+  created() {
+     this.$axios.post('http://localhost:8080/login/register', {
+   
+        username: "Adminn",
+        password: "Adminn",
+    
+      }).then(function (response) {
+        console.log(response);
+      }).catch(function (error) {
+        console.log(error);
+      }).then(function () {
+        console.log("done");
+      });
+  }
 };
 </script>

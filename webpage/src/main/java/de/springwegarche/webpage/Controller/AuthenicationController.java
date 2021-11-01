@@ -53,7 +53,7 @@ public class AuthenicationController {
             return WebResponses.okResponse(new AuthenticationResponse(jwtToken).toString());
         }
 
-        return WebResponses.internalServerErrorResponse("could not generate Token");
+        return WebResponses.internalServerErrorResponse("could_not_generate_token");
     }
 
     @RequestMapping(value = mainRoute + "/register", method = RequestMethod.POST)
@@ -79,6 +79,6 @@ public class AuthenicationController {
         // create User
         userDetailsService.addUser(user);
 
-        return WebResponses.okResponse("UserCreated");
+        return WebResponses.okResponse("user_created");
     }
 }

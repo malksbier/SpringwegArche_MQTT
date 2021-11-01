@@ -1,0 +1,16 @@
+{
+  "own-language" : "English",
+
+  "login": "Login",
+  "username": "Username",
+  "password": "Password",
+
+  "username_or_password_wrong": "The username or password is wrong.",
+  "username_wrong": "The username is wrong.",
+  "could_not_generate_token": "The login was not possible.",
+  "username_allready_exists": "The username allready exists.",
+  "username_has_to_be_six_chars_long": "The username has to be at least six characters long.",
+  "password_has_to_be_six_chars_long": "The password has to be at least six characters long.",
+  "password_has_invalid_chars": "The password has invalid characters.",
+  "user_created": "The registration was succesful."
+}

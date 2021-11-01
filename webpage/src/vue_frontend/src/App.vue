@@ -4,6 +4,7 @@
     <v-app-bar
       app color="primary" dark>
 
+      <language-switcher></language-switcher>
     </v-app-bar>
 
     <v-main>
@@ -13,8 +14,11 @@
 </template>
 
 <script>
+import LanguageSwitcher from './components/LanguageSwitcher.vue';
+import {getBrowserLocale} from "@/util/i18n/LocalsUtil"
 
 export default {
+  components: { LanguageSwitcher },
   name: 'App',
 
   data: () => ({
@@ -22,6 +26,9 @@ export default {
   }),
 
   created() {
+    this.$i18n.locale = getBrowserLocale({ countryCodeOnly: true });
+
+    /*
      this.$axios.post('http://localhost:8080/login/register', {
    
         username: "Adminn",
@@ -34,6 +41,8 @@ export default {
       }).then(function () {
         console.log("done");
       });
+
+    */
   }
 };
 </script>

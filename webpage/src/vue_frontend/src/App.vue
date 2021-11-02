@@ -11,7 +11,7 @@
         <v-list-item
           v-for="item in items"
           :key="item.title"
-          link>
+          link @click="switchPageSafe(item.path)">
           <v-list-item-icon class="v-list-item__icon-same-width">
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
@@ -19,6 +19,7 @@
           <v-list-item-content>
             <v-list-item-title>{{ $t(item.title) }}</v-list-item-title>
           </v-list-item-content>
+      
         </v-list-item>
 
         <language-switcher></language-switcher>
@@ -45,8 +46,10 @@
 </template>
 
 <script>
-import LanguageSwitcher from './components/LanguageSwitcher.vue';
+import LanguageSwitcher, { methods } from './components/LanguageSwitcher.vue';
 import {getBrowserLocale} from "@/util/i18n/LocalsUtil"
+import {switchPageSafely} from "@/util/RouterUtil"
+
 
 export default {
   components: { LanguageSwitcher },
@@ -55,8 +58,8 @@ export default {
   data: () => ({
     displayAppBar : true,
     items: [
-          { title: 'main_page', icon: 'fas fa-home' },
-          { title: 'about', icon: 'fas fa-address-card' },
+          { title: 'main_page', icon: 'fas fa-home' ,path: "/"},
+          { title: 'about', icon: 'fas fa-address-card' ,path: "/about"},
         ],
   }),
 
@@ -78,6 +81,11 @@ export default {
       });
 
     */
+  },
+  methods: {
+    switchPageSafe(path) {
+      switchPageSafely(this.$route, this.$router,path)
+    },
   }
 };
 </script>

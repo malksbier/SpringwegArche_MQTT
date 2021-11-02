@@ -1,3 +1,4 @@
+/*
 .v-list-item-same-height {
     max-height: 25px;
     min-height: 25px;
@@ -6,18 +7,10 @@
     max-width: 25px;
     min-width: 25px;
 }
-
+*/
 .no-magrin {
     margin: 0 !important;
 }
 .no-padding {
     padding: 0 !important;
-}
-
-.v-navigation-drawer {
-    z-index: 999999 !important;
-}
-.v-navigation-drawer--mini-variant {
-    width: 0px !important;
-    padding: 0px !important;
 }

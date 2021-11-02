@@ -1,6 +1,8 @@
 
 <template>
   <v-app>
+    <NavbarDesign></NavbarDesign>
+    <!--
     <v-row style="margin: 0">
       
         <v-navigation-drawer
@@ -30,13 +32,12 @@
       </v-list>
     </v-navigation-drawer>
      
-      
-    <v-main>
+    -->   
+    <v-main >
       <router-view/>
     </v-main>
 
-    </v-row>
-
+ 
     
 
     
@@ -46,13 +47,20 @@
 </template>
 
 <script>
+import Navbar from './components/Navbar.vue';
 import LanguageSwitcher, { methods } from './components/LanguageSwitcher.vue';
 import {getBrowserLocale} from "@/util/i18n/LocalsUtil"
 import {switchPageSafely} from "@/util/RouterUtil"
+import PageNotFound from './views/PageNotFound.vue';
+import NavbarDesign from './components/Navbar.vue';
 
 
 export default {
-  components: { LanguageSwitcher },
+  components: { 
+    //LanguageSwitcher, 
+    NavbarDesign,
+    //PageNotFound
+     },
   name: 'App',
 
   data: () => ({

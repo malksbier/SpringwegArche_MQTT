@@ -1,7 +1,7 @@
 
 <template>
   <v-app>
-    <NavbarDesign></NavbarDesign>
+    <NavbarDesign :user="user" @update-user="user = $event"></NavbarDesign>
     <!--
     <v-row style="margin: 0">
       
@@ -62,8 +62,9 @@ export default {
     //PageNotFound
      },
   name: 'App',
-
+  
   data: () => ({
+    user : 0, // 0 means null
     displayAppBar : true,
     items: [
           { title: 'main_page', icon: 'fas fa-home' ,path: "/"},

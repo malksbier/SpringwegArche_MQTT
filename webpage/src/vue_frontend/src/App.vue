@@ -5,18 +5,18 @@
       
         <v-navigation-drawer
       class="deep-purple accent-4 px-4"
-      dark
-      permanent>
+      dark  v-bind:width="200"
+      permanent expand-on-hover>
       <v-list>
         <v-list-item
           v-for="item in items"
           :key="item.title"
-          link @click="switchPageSafe(item.path)">
+           @click="switchPageSafe(item.path)">
           <v-list-item-icon class="v-list-item__icon-same-width">
             <v-icon>{{ item.icon }}</v-icon>
           </v-list-item-icon>
 
-          <v-list-item-content>
+          <v-list-item-content link>  
             <v-list-item-title>{{ $t(item.title) }}</v-list-item-title>
           </v-list-item-content>
       

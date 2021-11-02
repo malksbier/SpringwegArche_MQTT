@@ -1,6 +1,13 @@
 {
   "own-language" : "English",
 
+  "appname" : "MQTT Controler",
+  "navigation" : "Navigation",
+
+  "sign_in" : "login",
+  "sign_out" : "logout",
+
+
   "main_page":"Home",
   "about":"About",
 

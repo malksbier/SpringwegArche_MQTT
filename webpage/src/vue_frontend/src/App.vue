@@ -1,16 +1,46 @@
 
 <template>
   <v-app>
-    <v-app-bar v-if="displayAppBar"
-      app color="primary" elevation="7">
+    <v-row style="margin: 0">
       
-      
-      <language-switcher></language-switcher>
-    </v-app-bar>
+        <v-navigation-drawer
+      class="deep-purple accent-4 px-4"
+      dark
+      permanent>
+      <v-list>
+        <v-list-item
+          v-for="item in items"
+          :key="item.title"
+          link>
+          <v-list-item-icon class="v-list-item__icon-same-width">
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
 
+          <v-list-item-content>
+            <v-list-item-title>{{ $t(item.title) }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+
+        <language-switcher></language-switcher>
+
+        <v-btn block>
+            Logout
+          </v-btn>
+      </v-list>
+    </v-navigation-drawer>
+     
+      
     <v-main>
       <router-view/>
     </v-main>
+
+    </v-row>
+
+    
+
+    
+
+    
   </v-app>
 </template>
 
@@ -24,6 +54,10 @@ export default {
 
   data: () => ({
     displayAppBar : true,
+    items: [
+          { title: 'main_page', icon: 'fas fa-home' },
+          { title: 'about', icon: 'fas fa-address-card' },
+        ],
   }),
 
   created() {

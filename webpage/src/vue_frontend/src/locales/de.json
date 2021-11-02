@@ -1,6 +1,9 @@
 {
     "own-language" : "Deutsch",
 
+    "main_page":"Hauptseite",
+    "about":"Über Uns",
+
     "login": "Login",
     "username": "Nutzername",
     "password": "Passwort",

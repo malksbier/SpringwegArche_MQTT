@@ -1,6 +1,9 @@
 {
   "own-language" : "English",
 
+  "main_page":"Home",
+  "about":"About",
+
   "login": "Login",
   "username": "Username",
   "password": "Password",
@@ -13,4 +16,6 @@
   "password_has_to_be_six_chars_long": "The password has to be at least six characters long.",
   "password_has_invalid_chars": "The password has invalid characters.",
   "user_created": "The registration was succesful."
+
+  
 }

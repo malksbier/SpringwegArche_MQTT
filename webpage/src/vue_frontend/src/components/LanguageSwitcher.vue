@@ -1,9 +1,16 @@
 <template>
   <div class="languageSwitcher">
-        <v-row >
-          <v-switch @change="languageToggled()"></v-switch>
-          <p> {{$t("own-language")}} </p>
-        </v-row>
+        <v-list-item class="v-list-item-same-height"> 
+          <v-list-item-icon class="v-list-item__icon-same-width" style="margin-top: 13px"> 
+            <v-switch @change="languageToggled()" class="no-magrin no-padding"></v-switch>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{$t("own-language")}}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      
+        
   </div>
 </template>
 

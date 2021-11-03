@@ -98,12 +98,14 @@
             <v-card-actions class="pt-3">
                 <v-spacer></v-spacer>
                 <v-btn
+                    :disabled="loginBlock"
                     light
                     text
                     @click="loginDialog = false; registrationDialog = true;">
                         {{ $t("do_registration") }}
                 </v-btn>
                 <v-btn
+                    :disabled="loginBlock"
                     dark 
                     @click="signIn()">
                         {{ $t("sign_in") }}
@@ -219,6 +221,7 @@ export default {
             loginSuccsesText: "",
             registrationSuccsesText: "",
             registrationBlock: false,
+            loginBlock: false,
 
             userRegistration: {
                 username: "",
@@ -242,11 +245,7 @@ export default {
         },
         signIn(username, password) {
             var _this = this;
-            /*
-            //console.log("signin");
-            var myUser = 1;
-            this.$emit("update-user", myUser);
-            */
+ 
            if(this.loginValid) {
 
                this.loginErrorText = "";
@@ -255,10 +254,26 @@ export default {
                this.$axios.post('http://localhost:8080/login/autheticate', this.userLogin).then(function (response) {
                     if(response.status == 200) {
                         _this.loginSuccsesText = response.data;
-                        console.log(response.data.jwtToken);
+                        
+                        var data = response.data;
+                        const matches = [...data.matchAll(/'(.*?)'/g)];
+                        var jswToken = matches[0][1];
 
-                        //this.loginDialog = false;
-                        _this.loginErrorText = "";
+                        if(jswToken.startsWith("Bearer")) {
+                            _this.loginSuccsesText = "login_succesful";
+
+                            _this.loginBlock = true;
+                            _this.loginDialog = false;
+
+                            var myUser = jswToken;
+                            _this.$emit("update-user", myUser);
+                        } else {
+                            _this.loginErrorText = "login_unsuccesful";
+                        }
+
+                        
+
+                        
                     }
                 }).catch(function (error) {
                     _this.loginErrorText = error.response.data;
@@ -295,11 +310,15 @@ export default {
            }
         },
         signOut() {
-            /*
-            //console.log("signOut");
+            this.userLogin.password = "";
+            this.userLogin.username = "";
+
+            this.loginBlock = false;
+
+            this.registrationSuccsesText = "";
+
             var myUser = 0;
             this.$emit("update-user", myUser);
-            */
         },
         switchPageSafe(path) {
             switchPageSafely(this.$route, this.$router,path)

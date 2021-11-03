@@ -32,6 +32,8 @@
   "password_has_to_be_six_chars_long": "The password has to be at least six characters long.",
   "password_has_invalid_chars": "The password has invalid characters.",
   "user_created": "The registration was succesful.",
+  "login_succesful" : "The login was succesful",
+  "login_unsuccesful" : "The login was not succesful",
   "error_todo": "unexpected Error"
 
 }

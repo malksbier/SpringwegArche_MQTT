@@ -63,6 +63,7 @@ public class RegisterRequest {
         return "{" +
             " username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +
+            ", email='" + getEmail() + "'" +
             "}";
     }
 }

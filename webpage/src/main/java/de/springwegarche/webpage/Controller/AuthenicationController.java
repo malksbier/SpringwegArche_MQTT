@@ -25,6 +25,7 @@ import de.springwegarche.webpage.Util.Security.SqlInjectionChecker;
 
 @RestController
 public class AuthenicationController {
+    private final String TAG = "[AuthenicationController] ";
     private final String mainRoute = "/login";
 
     @Autowired
@@ -36,6 +37,7 @@ public class AuthenicationController {
 
     @RequestMapping(value = mainRoute + "/autheticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenicationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+        System.out.println(TAG + "/autheticate :" + authenticationRequest.toString());
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
         } catch (AuthenticationException e) {
@@ -58,6 +60,7 @@ public class AuthenicationController {
 
     @RequestMapping(value = mainRoute + "/register", method = RequestMethod.POST)
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest registerRequest) throws Exception {
+        System.out.println(TAG + "/register :" + registerRequest.toString());
         // check if user exists
         final UserDetails userDetails = userDetailsService.loadUserByUsername(registerRequest.getUsername());
         if(userDetails != null) {

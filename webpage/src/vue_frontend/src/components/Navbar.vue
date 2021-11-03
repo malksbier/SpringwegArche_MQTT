@@ -67,8 +67,8 @@
                 <v-form v-model="loginValid">
 
                 <v-text-field
-                required
                 v-model="userLogin.username"
+                required type="username" name="username" autocomplete="on"
                 :label="$t('username')" 
                 :rules="getUsernameRules()"
                 hide-details="auto"
@@ -76,7 +76,7 @@
 
                 <v-text-field
                 v-model="userLogin.password"
-                required type="password"
+                required type="password" name="password" autocomplete="on"
                 :label="$t('password')" 
                 :rules="getPasswordRules()"
                 hide-details="auto"
@@ -132,6 +132,7 @@
                 required
                 :disabled="registrationBlock"
                 v-model="userRegistration.username"
+                type="username" name="username" autocomplete="on"
                 :label="$t('username')" 
                 :rules="getUsernameRules()"
                 hide-details="auto"
@@ -139,8 +140,9 @@
 
                 <v-text-field
                 v-model="userRegistration.password"
+                type="password" name="password" autocomplete="on"
                 :disabled="registrationBlock"
-                required type="password"
+                required 
                 :label="$t('password')" 
                 :rules="getPasswordRules()"
                 hide-details="auto"
@@ -149,6 +151,7 @@
                 <v-text-field
                 required
                 v-model="userRegistration.email"
+                type="email" name="email" autocomplete="on"
                 :disabled="registrationBlock"
                 :label="$t('email')" 
                 :rules="getEmailRules()"
@@ -238,14 +241,30 @@ export default {
             this.showNavigationDrawer = false;
         },
         signIn(username, password) {
+            var _this = this;
             /*
             //console.log("signin");
             var myUser = 1;
             this.$emit("update-user", myUser);
             */
            if(this.loginValid) {
-               this.loginDialog = false;
+
                this.loginErrorText = "";
+               this.loginSuccsesText = "";
+
+               this.$axios.post('http://localhost:8080/login/autheticate', this.userLogin).then(function (response) {
+                    if(response.status == 200) {
+                        _this.loginSuccsesText = response.data;
+                        console.log(response.data.jwtToken);
+
+                        //this.loginDialog = false;
+                        _this.loginErrorText = "";
+                    }
+                }).catch(function (error) {
+                    _this.loginErrorText = error.response.data;
+                });
+
+               
            } else {
                this.loginErrorText = "missing_inputs"
            }
@@ -268,8 +287,6 @@ export default {
                         _this.userLogin.password = _this.userRegistration.password;
                     }
                 }).catch(function (error) {
-                    console.log("test");
-                    console.log(error.response.data);
                     _this.registrationErrorText = error.response.data;
                 });
 

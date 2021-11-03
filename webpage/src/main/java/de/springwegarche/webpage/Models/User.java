@@ -27,22 +27,40 @@ public class User implements UserDetails{
     private long id;
     private String password;
     private String username;
+    private String email;
 
+    public User(long id, String password, String username, String email) {
+        this.id = id;
+        this.password = password;
+        this.username = username;
+        this.email = email;
+    }
+
+    public User(long id, String password, String username) {
+        this.id = id;
+        this.password = password;
+        this.username = username;
+        this.email = "";
+    }
+    public User(String password, String username) {
+        this.id = 0;
+        this.password = password;
+        this.username = username;
+        this.email = "";
+    }
+
+    @Column(name = "email", nullable = false)
+    public String getEmail() {
+        return this.email;
+    }
+
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public User() {
     }
-
-    public User(long id, String username, String password) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-    }
-    public User(String username, String password) {
-        this.id = 0;
-        this.username = username;
-        this.password = password;
-    }
-
     
     public long getId() {
         return this.id;

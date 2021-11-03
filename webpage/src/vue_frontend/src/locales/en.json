@@ -6,7 +6,12 @@
 
   "sign_in" : "login",
   "sign_out" : "logout",
+  "do_registration" : "register",
 
+  "required":"required",
+  "min_6_characters":"at least 6 characters",
+  "max_20_characters": "maximum 20 characters",
+  "missing_inputs" : "missing or wrong declarations",
 
   "main_page":"Home",
   "about":"About",

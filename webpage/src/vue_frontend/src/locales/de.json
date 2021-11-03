@@ -6,6 +6,12 @@
 
     "sign_in" : "anmelden",
     "sign_out" : "abmelden",
+    "do_registration" : "registrieren",
+
+    "required":"notwendig",
+    "min_6_characters":"mindestens 6 Zeichen",
+    "max_20_characters": "maximal 20 Zeichen",
+    "missing_inputs" : "fehlende oder falsche Angaben",
 
     "main_page":"Hauptseite",
     "about":"Über Uns",

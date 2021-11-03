@@ -1,5 +1,7 @@
 <template>
+<div class="navbar">
     <nav>
+        <!-- OBERE LEISTE -->
         <v-app-bar flat app dark elevation="4">
             <v-app-bar-nav-icon @click="showNavigationDrawer = !showNavigationDrawer" style="margin: 5px !important;">
                 <v-icon> fas fa-bars </v-icon>
@@ -12,19 +14,18 @@
                 <span> {{ $t("sign_out") }} </span>
                 <v-icon right>fas fa-sign-out-alt</v-icon>
             </v-btn>
-            <v-btn light  v-if="user == 0" @click="signIn();">
+            <v-btn light  v-if="user == 0" @click="loginDialog = true">
                 <span> {{ $t("sign_in") }} </span>
                 <v-icon right>fas fa-sign-in-alt</v-icon>
             </v-btn>
         </v-app-bar>
 
+        <!-- Linke LEISTE -->
         <v-navigation-drawer app v-model="showNavigationDrawer"> 
             <div style="height: 100%" @mouseleave="hideNavigationDrawer()">
             <v-list>
              
                     <h4 class="px-4 pt-6">{{ $t("navigation") }}</h4>
-             
-                
 
                 <v-divider></v-divider>
                 <v-list-item
@@ -48,10 +49,76 @@
             </div>
         </v-navigation-drawer>
     </nav>
+    <!-- Registratration und Login -->
+    <v-dialog persistent 
+      v-model="loginDialog"
+      width="600px" > 
+        <v-card> 
+           
+            <v-card-title class="pb-0" >
+                <span class="text-h5 ">{{ $t("login") }} </span>
+            </v-card-title>
+
+            <v-btn plain @click="loginDialog = false" class="pa-4" style="position: absolute; right:0px; top: 0px; border: 0px !important">
+                <v-icon>fas fa-times</v-icon>
+            </v-btn>
+
+            <div class="px-5">
+                <v-form v-model="loginValid">
+
+                <v-text-field
+                required
+                :label="$t('username')" 
+                :rules="getUsernameRules()"
+                hide-details="auto"
+                ></v-text-field>
+
+                <v-text-field
+                required type="password"
+                :label="$t('password')" 
+                :rules="getPasswordRules()"
+                hide-details="auto"
+                ></v-text-field>
+
+                <p v-if="loginErrorText" class="text-h6 pt-2 my-0 error--text">
+                    <v-icon color="red lighten-2">fas fa-exclamation-triangle</v-icon>
+                    {{ $t(loginErrorText) }} 
+                </p>
+
+                </v-form>
+            </div>
+
+            <v-spacer></v-spacer>
+            
+            <v-card-actions class="pt-3">
+                <v-spacer></v-spacer>
+                <v-btn
+                    light
+                    text
+                    @click="loginDialog = false; registrationDialog = true;">
+                        {{ $t("do_registration") }}
+                </v-btn>
+                <v-btn
+                    dark 
+                    @click="signIn()">
+                        {{ $t("sign_in") }}
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+        
+        
+    </v-dialog>
+    <v-dialog persistent hide-overlay
+      v-model="registrationDialog"
+      width="600px"> 
+        <p>Registration</p>
+    </v-dialog>
+    
+</div>
 </template>
 
 <script>
-import {switchPageSafely} from "@/util/RouterUtil"
+import {switchPageSafely} from "@/util/RouterUtil";
 import LanguageSwitcher from '@/components/LanguageSwitcher.vue';
 
 export default {
@@ -67,6 +134,12 @@ export default {
     data() {
         return {
             showNavigationDrawer: false,
+            loginDialog: false,
+            registrationDialog: false,
+            loginValid: false,
+            registrationValid: false,
+            loginErrorText: "",
+            registrationErrorText: "",
 
             routes: [
                 { title: 'main_page', icon: 'fas fa-home' ,path: "/"},
@@ -78,19 +151,57 @@ export default {
         hideNavigationDrawer() {
             this.showNavigationDrawer = false;
         },
-        signIn() {
+        signIn(username, password) {
+            /*
             //console.log("signin");
             var myUser = 1;
             this.$emit("update-user", myUser);
+            */
+           if(this.loginValid) {
+               this.loginDialog = false;
+               this.loginErrorText = "";
+           } else {
+               console.log("notValid");
+               this.loginErrorText = "missing_inputs"
+           }
+
+            
         },
         signOut() {
+            /*
             //console.log("signOut");
             var myUser = 0;
             this.$emit("update-user", myUser);
+            */
         },
         switchPageSafe(path) {
             switchPageSafely(this.$route, this.$router,path)
         },
+
+
+        getEmailRules() {
+            return [
+                value => !!value || this.$t("required"),
+                value => (value || '').length >= 6 || this.$t('min_6_characters'),
+                value => {
+                    const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                    return pattern.test(value) || this.$t('invalid_e-mail')
+                },
+            ];
+        },
+        getUsernameRules(localisation) {
+            return [
+                value => !!value || this.$t("required"),
+                value => (value || '').length <= 20 || this.$t('max_20_characters'),
+                value => (value || '').length >= 6 || this.$t('min_6_characters'),
+            ];
+        },
+        getPasswordRules(localisation) {
+            return [
+                value => !!value || this.$t("required"),
+                value => (value || '').length >= 6 || this.$t('min_6_characters')
+            ];
+        }
     }
 }
 </script>

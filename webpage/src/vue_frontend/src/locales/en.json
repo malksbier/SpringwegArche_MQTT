@@ -4,21 +4,23 @@
   "appname" : "MQTT Controler",
   "navigation" : "Navigation",
 
-  "sign_in" : "login",
-  "sign_out" : "logout",
-  "do_registration" : "register",
-
-  "required":"required",
-  "min_6_characters":"at least 6 characters",
-  "max_20_characters": "maximum 20 characters",
-  "missing_inputs" : "missing or wrong declarations",
-
   "main_page":"Home",
   "about":"About",
 
   "login": "Login",
+  "registration": "Register",
   "username": "Username",
   "password": "Password",
+  "email": "E-Mail",
+  "sign_in" : "login",
+  "sign_out" : "logout",
+  "do_registration" : "register",
+  "do_login" : "login",
+  "required":"required",
+  "min_6_characters":"at least 6 characters",
+  "max_20_characters": "maximum 20 characters",
+  "invalid_e-mail" : "invalid e-mail",
+  "missing_inputs" : "missing or wrong declarations",
 
   "username_or_password_wrong": "The username or password is wrong.",
   "username_wrong": "The username is wrong.",
@@ -28,6 +30,4 @@
   "password_has_to_be_six_chars_long": "The password has to be at least six characters long.",
   "password_has_invalid_chars": "The password has invalid characters.",
   "user_created": "The registration was succesful."
-
-  
 }

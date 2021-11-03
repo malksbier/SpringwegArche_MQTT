@@ -49,7 +49,7 @@
             </div>
         </v-navigation-drawer>
     </nav>
-    <!-- Registratration und Login -->
+    <!-- Login -->
     <v-dialog persistent 
       v-model="loginDialog"
       width="600px" > 
@@ -105,13 +105,70 @@
                 </v-btn>
             </v-card-actions>
         </v-card>
-        
-        
     </v-dialog>
-    <v-dialog persistent hide-overlay
+     <!-- Registratration-->
+    <v-dialog persistent 
       v-model="registrationDialog"
-      width="600px"> 
-        <p>Registration</p>
+      width="600px" > 
+        <v-card> 
+           
+            <v-card-title class="pb-0" >
+                <span class="text-h5 ">{{ $t("registration") }} </span>
+            </v-card-title>
+
+            <v-btn plain @click="registrationDialog = false" class="pa-4" style="position: absolute; right:0px; top: 0px; border: 0px !important">
+                <v-icon>fas fa-times</v-icon>
+            </v-btn>
+
+            <div class="px-5">
+                <v-form v-model="registrationValid">
+
+                <v-text-field
+                required
+                :label="$t('username')" 
+                :rules="getUsernameRules()"
+                hide-details="auto"
+                ></v-text-field>
+
+                <v-text-field
+                required type="password"
+                :label="$t('password')" 
+                :rules="getPasswordRules()"
+                hide-details="auto"
+                ></v-text-field>
+
+                <v-text-field
+                required
+                :label="$t('email')" 
+                :rules="getEmailRules()"
+                hide-details="auto"
+                ></v-text-field>
+
+                <p v-if="registrationErrorText" class="text-h6 pt-2 my-0 error--text">
+                    <v-icon color="red lighten-2">fas fa-exclamation-triangle</v-icon>
+                    {{ $t(registrationErrorText) }} 
+                </p>
+
+                </v-form>
+            </div>
+
+            <v-spacer></v-spacer>
+            
+            <v-card-actions class="pt-3">
+                <v-spacer></v-spacer>
+                <v-btn
+                    light
+                    text
+                    @click=" registrationDialog= false; loginDialog = true;">
+                        {{ $t("do_login") }}
+                </v-btn>
+                <v-btn
+                    dark 
+                    @click="register()">
+                        {{ $t("do_registration") }}
+                </v-btn>
+            </v-card-actions>
+        </v-card>
     </v-dialog>
     
 </div>
@@ -161,11 +218,18 @@ export default {
                this.loginDialog = false;
                this.loginErrorText = "";
            } else {
-               console.log("notValid");
                this.loginErrorText = "missing_inputs"
            }
 
             
+        },
+        register() {
+            if(this.registrationValid) {
+               this.registrationDialog = false;
+               this.registrationErrorText = "";
+           } else {
+               this.registrationErrorText = "missing_inputs"
+           }
         },
         signOut() {
             /*
@@ -182,11 +246,11 @@ export default {
         getEmailRules() {
             return [
                 value => !!value || this.$t("required"),
-                value => (value || '').length >= 6 || this.$t('min_6_characters'),
                 value => {
                     const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                     return pattern.test(value) || this.$t('invalid_e-mail')
                 },
+                value => (value || '').length >= 6 || this.$t('min_6_characters'),
             ];
         },
         getUsernameRules(localisation) {

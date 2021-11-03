@@ -31,5 +31,7 @@
   "username_has_to_be_six_chars_long": "The username has to be at least six characters long.",
   "password_has_to_be_six_chars_long": "The password has to be at least six characters long.",
   "password_has_invalid_chars": "The password has invalid characters.",
-  "user_created": "The registration was succesful."
+  "user_created": "The registration was succesful.",
+  "error_todo": "unexpected Error"
+
 }

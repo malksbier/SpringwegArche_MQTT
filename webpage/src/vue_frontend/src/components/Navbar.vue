@@ -68,12 +68,14 @@
 
                 <v-text-field
                 required
+                v-model="userLogin.username"
                 :label="$t('username')" 
                 :rules="getUsernameRules()"
                 hide-details="auto"
                 ></v-text-field>
 
                 <v-text-field
+                v-model="userLogin.password"
                 required type="password"
                 :label="$t('password')" 
                 :rules="getPasswordRules()"
@@ -83,6 +85,9 @@
                 <p v-if="loginErrorText" class="text-h6 pt-2 my-0 error--text">
                     <v-icon color="red lighten-2">fas fa-exclamation-triangle</v-icon>
                     {{ $t(loginErrorText) }} 
+                </p>
+                <p v-if="loginSuccsesText" class="text-h6 pt-2 my-0">
+                    {{ $t(loginSuccsesText) }} 
                 </p>
 
                 </v-form>
@@ -125,12 +130,16 @@
 
                 <v-text-field
                 required
+                :disabled="registrationBlock"
+                v-model="userRegistration.username"
                 :label="$t('username')" 
                 :rules="getUsernameRules()"
                 hide-details="auto"
                 ></v-text-field>
 
                 <v-text-field
+                v-model="userRegistration.password"
+                :disabled="registrationBlock"
                 required type="password"
                 :label="$t('password')" 
                 :rules="getPasswordRules()"
@@ -139,6 +148,8 @@
 
                 <v-text-field
                 required
+                v-model="userRegistration.email"
+                :disabled="registrationBlock"
                 :label="$t('email')" 
                 :rules="getEmailRules()"
                 hide-details="auto"
@@ -147,6 +158,9 @@
                 <p v-if="registrationErrorText" class="text-h6 pt-2 my-0 error--text">
                     <v-icon color="red lighten-2">fas fa-exclamation-triangle</v-icon>
                     {{ $t(registrationErrorText) }} 
+                </p>
+                <p v-if="registrationSuccsesText" class="text-h6 pt-2 my-0">
+                    {{ $t(registrationSuccsesText) }} 
                 </p>
 
                 </v-form>
@@ -163,6 +177,8 @@
                         {{ $t("do_login") }}
                 </v-btn>
                 <v-btn
+                    v-if="!registrationBlock"
+                    :disabled="registrationBlock"
                     dark 
                     @click="register()">
                         {{ $t("do_registration") }}
@@ -197,6 +213,19 @@ export default {
             registrationValid: false,
             loginErrorText: "",
             registrationErrorText: "",
+            loginSuccsesText: "",
+            registrationSuccsesText: "",
+            registrationBlock: false,
+
+            userRegistration: {
+                username: "",
+                password: "",
+                email: "",
+            },
+            userLogin: {
+                username: "",
+                password: "",
+            },
 
             routes: [
                 { title: 'main_page', icon: 'fas fa-home' ,path: "/"},
@@ -224,9 +253,26 @@ export default {
             
         },
         register() {
+            var _this = this;
             if(this.registrationValid) {
-               this.registrationDialog = false;
+               
                this.registrationErrorText = "";
+               this.registrationSuccsesText = "";
+
+               this.$axios.post('http://localhost:8080/login/register', this.userRegistration).then(function (response) {
+                    if(response.status == 200) {
+                        _this.registrationSuccsesText = response.data;
+                        _this.registrationBlock = true;
+
+                        _this.userLogin.username = _this.userRegistration.username;
+                        _this.userLogin.password = _this.userRegistration.password;
+                    }
+                }).catch(function (error) {
+                    console.log("test");
+                    console.log(error.response.data);
+                    _this.registrationErrorText = error.response.data;
+                });
+
            } else {
                this.registrationErrorText = "missing_inputs"
            }
@@ -253,14 +299,14 @@ export default {
                 value => (value || '').length >= 6 || this.$t('min_6_characters'),
             ];
         },
-        getUsernameRules(localisation) {
+        getUsernameRules() {
             return [
                 value => !!value || this.$t("required"),
                 value => (value || '').length <= 20 || this.$t('max_20_characters'),
                 value => (value || '').length >= 6 || this.$t('min_6_characters'),
             ];
         },
-        getPasswordRules(localisation) {
+        getPasswordRules() {
             return [
                 value => !!value || this.$t("required"),
                 value => (value || '').length >= 6 || this.$t('min_6_characters')

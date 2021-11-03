@@ -6,6 +6,8 @@
 
   "main_page":"Home",
   "about":"About",
+  "page_not_found": "page not found",
+  "page_not_found_hint": "Please try to navigate yourselfe.",
 
   "login": "Login",
   "registration": "Register",

@@ -74,8 +74,11 @@ public class AuthenicationController {
         if(SqlInjectionChecker.isSafe(registerRequest.getUsername()) == false) {
             return WebResponses.badResponse("password_has_invalid_chars");
         }
+        if(SqlInjectionChecker.isSafe(registerRequest.getEmail()) == false) {
+            return WebResponses.badResponse("email_has_invalid_chars");
+        }
 
-        final User user = new User(registerRequest.getUsername(),registerRequest.getUsername());
+        final User user = new User(registerRequest.getUsername(),registerRequest.getUsername(),registerRequest.getEmail());
         // create User
         userDetailsService.addUser(user);
 

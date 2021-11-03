@@ -35,7 +35,12 @@ public class User implements UserDetails{
         this.username = username;
         this.email = email;
     }
-
+    public User(String password, String username, String email) {
+        this.id = 0;
+        this.password = password;
+        this.username = username;
+        this.email = email;
+    }
     public User(long id, String password, String username) {
         this.id = id;
         this.password = password;

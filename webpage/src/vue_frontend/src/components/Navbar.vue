@@ -211,6 +211,8 @@ export default {
 
     data() {
         return {
+            apiIp: "http://192.168.2.105:8080",
+
             showNavigationDrawer: false,
             loginDialog: false,
             registrationDialog: false,
@@ -251,7 +253,7 @@ export default {
                this.loginErrorText = "";
                this.loginSuccsesText = "";
 
-               this.$axios.post('http://localhost:8080/login/autheticate', this.userLogin).then(function (response) {
+               this.$axios.post(_this.apiIp + '/login/autheticate', this.userLogin).then(function (response) {
                     if(response.status == 200) {
                         _this.loginSuccsesText = response.data;
                         
@@ -293,7 +295,7 @@ export default {
                this.registrationErrorText = "";
                this.registrationSuccsesText = "";
 
-               this.$axios.post('http://localhost:8080/login/register', this.userRegistration).then(function (response) {
+               this.$axios.post(_this.apiIp +  '/login/register', this.userRegistration).then(function (response) {
                     if(response.status == 200) {
                         _this.registrationSuccsesText = response.data;
                         _this.registrationBlock = true;
@@ -315,7 +317,7 @@ export default {
 
             this.loginBlock = false;
 
-            this.registrationSuccsesText = "";
+            this.loginSuccsesText = "";
 
             var myUser = 0;
             this.$emit("update-user", myUser);

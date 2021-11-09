@@ -20,7 +20,6 @@ import de.springwegarche.webpage.Models.DAO.AuthenticationRequest;
 import de.springwegarche.webpage.Models.DAO.AuthenticationResponse;
 import de.springwegarche.webpage.Models.DAO.RegisterRequest;
 import de.springwegarche.webpage.Util.WebResponses;
-import de.springwegarche.webpage.Util.Email.EmailService;
 import de.springwegarche.webpage.Util.Security.JwtUtil;
 import de.springwegarche.webpage.Util.Security.SqlInjectionChecker;
 import de.springwegarche.webpage.Util.Security.UserToken.UserToken;
@@ -37,13 +36,6 @@ public class AuthenicationController {
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private JwtUtil jwtUtil;
-    @Autowired
-    private EmailService emailService;
-
-    public AuthenicationController(EmailService es) {
-        //this.emailService = es;
-    }
-
 
     @RequestMapping(value = mainRoute + "/autheticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenicationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
@@ -92,18 +84,12 @@ public class AuthenicationController {
         }
 
         UserToken token = UserTokenGenerator.emailValidateUserToken();
-        // Check validity of Email
-
-        try {
-            //new EmailSender().sendValidateMail(registerRequest.getEmail(),token,registerRequest.getLanguage() == "de");
-            this.emailService.sendMessage("anton-malke@t-online.de","test","test");
-        } catch (Exception e) {
-            System.out.println("could not send email: " + e.getMessage());
-            return WebResponses.badResponse("invalid_e-mail");
-        }
-
+        // TODO sending email approve email
+        // Try to send mail
+        System.out.println("[Email Approve Code] email:" + registerRequest.getUsername() + ", token: " + token.getToken());
         final User user = new User(registerRequest.getUsername(),registerRequest.getUsername(),registerRequest.getEmail());
         user.addToken(token);
+
         // create User
         userDetailsService.addUser(user);
 

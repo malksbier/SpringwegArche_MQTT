@@ -10,21 +10,31 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
-@Table(name = "UserToken")
+@Table(name = "user_token")
 public class UserToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String token;
 
-    public UserToken(String token) {
+    @Column(name = "token", nullable = false)
+    private String token;
+    
+    private long userId;
+
+
+    public UserToken(String token, long userId) {
+        this.id = 0;
         this.token = token;
+        this.userId = userId;
     }
 
-    public UserToken(long id,String token) {
-        this.token = token;
+    public UserToken(long id, String token, long userId) {
         this.id = id;
+        this.token = token;
+        this.userId = userId;
     }
 
     public long getId() {
@@ -35,13 +45,20 @@ public class UserToken {
         this.id = id;
     }
 
-    @Column(name = "token", nullable = false)
     public String getToken() {
         return this.token;
     }
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public long getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     @Override
@@ -52,20 +69,21 @@ public class UserToken {
             return false;
         }
         UserToken userToken = (UserToken) o;
-        return Objects.equals(token, userToken.token);
+        return id == userToken.id && Objects.equals(token, userToken.token) && userId == userToken.userId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(token);
+        return Objects.hash(id, token, userId);
     }
 
     @Override
     public String toString() {
         return "{" +
-            " token='" + getToken() + "'" +
+            " id='" + getId() + "'" +
+            ", token='" + getToken() + "'" +
+            ", userId='" + getUserId() + "'" +
             "}";
     }
-
 
 }

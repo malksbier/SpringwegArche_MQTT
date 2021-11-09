@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.springwegarche.webpage.Controller.Services.UserDetailsServiceImpl;
+import de.springwegarche.webpage.Controller.Services.UserService;
 import de.springwegarche.webpage.Models.User;
 import de.springwegarche.webpage.Models.DAO.AuthenticationRequest;
 import de.springwegarche.webpage.Models.DAO.AuthenticationResponse;
+import de.springwegarche.webpage.Models.DAO.EmailAuthenticationRequest;
 import de.springwegarche.webpage.Models.DAO.RegisterRequest;
 import de.springwegarche.webpage.Util.WebResponses;
 import de.springwegarche.webpage.Util.Security.JwtUtil;
@@ -33,7 +34,7 @@ public class AuthenicationController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private UserService userDetailsService;
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -83,16 +84,32 @@ public class AuthenicationController {
             return WebResponses.badResponse("email_has_invalid_chars");
         }
 
-        UserToken token = UserTokenGenerator.emailValidateUserToken();
-        // TODO sending email approve email
-        // Try to send mail
-        System.out.println("[Email Approve Code] email:" + registerRequest.getUsername() + ", token: " + token.getToken());
-        final User user = new User(registerRequest.getUsername(),registerRequest.getUsername(),registerRequest.getEmail());
-        user.addToken(token);
-
+        
+        
+        
+        final User user = new User(registerRequest.getPassword(),registerRequest.getUsername(),registerRequest.getEmail());
         // create User
         userDetailsService.addUser(user);
+        User newUser = userDetailsService.getUserByUsername(registerRequest.getUsername());
+        
+        UserToken emailAuthToken = UserTokenGenerator.emailValidateUserToken(newUser.getId());
+
+        // TODO sending email approve email
+        // Try to send mail
+        System.out.println("[Email Approve Code] email:" + newUser.getEmail() + ", token: " + emailAuthToken.getToken());
+        
 
         return WebResponses.okResponse("user_created_enter_code");
+    }
+
+    @RequestMapping(value = mainRoute + "/autheticateEmail", method = RequestMethod.POST)
+    public ResponseEntity<?> createAuthenicationToken(@RequestBody EmailAuthenticationRequest emailAuthenticationRequest) throws Exception {
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(emailAuthenticationRequest.getUsername());
+        if(userDetails != null) {
+            
+            return WebResponses.okResponse("code_valid");
+        }
+        return WebResponses.unauthorizedResponse("code_not_valid");
     }
 }

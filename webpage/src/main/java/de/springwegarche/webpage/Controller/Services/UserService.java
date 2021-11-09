@@ -10,7 +10,7 @@ import de.springwegarche.webpage.Models.User;
 import de.springwegarche.webpage.Models.Repositories.UserRepository;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService{
+public class UserService implements UserDetailsService{
 
     @Autowired
     private UserRepository userRepository;
@@ -20,11 +20,14 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         // TODO get User from DB
         return userRepository.findByUsername(username);
     }
+    public User getUserByUsername(String username) throws UsernameNotFoundException {
+        // TODO get User from DB
+        return userRepository.findByUsername(username);
+    }
     public void deleteUser(User user) {
         userRepository.delete(user);
     } 
-    public void addUser(UserDetails userDetails) {
-        User user = new User(userDetails.getUsername(),userDetails.getPassword());
+    public void addUser(User user) {
         userRepository.saveAndFlush(user);
     }
 }

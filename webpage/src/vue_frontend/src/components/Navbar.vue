@@ -160,6 +160,12 @@
                 hide-details="auto"
                 ></v-text-field>
 
+                <v-text-field
+                    :label="$t('emailVerificationCode')"
+                    v-if="enterEmailVerificationCode"
+                    v-model="emailVerificationCode"
+                ></v-text-field>
+
                 <p v-if="registrationErrorText" class="text-h6 pt-2 my-0 error--text">
                     <v-icon color="red lighten-2">fas fa-exclamation-triangle</v-icon>
                     {{ $t(registrationErrorText) }} 
@@ -175,6 +181,13 @@
             
             <v-card-actions class="pt-3">
                 <v-spacer></v-spacer>
+                <v-btn
+                    v-if="enterEmailVerificationCode"
+                    light
+                    text
+                    @click="verificateEmail()">
+                        {{ $t("do_verification_email") }}
+                </v-btn>
                 <v-btn
                     light
                     text
@@ -225,6 +238,9 @@ export default {
             registrationBlock: false,
             loginBlock: false,
 
+            enterEmailVerificationCode: false,
+            emailVerificationCode: "",
+
             userRegistration: {
                 username: "",
                 password: "",
@@ -245,6 +261,9 @@ export default {
     methods: {
         hideNavigationDrawer() {
             this.showNavigationDrawer = false;
+        },
+        verificateEmail() {
+            console.log("check email code: " + this.emailVerificationCode );
         },
         signIn(username, password) {
             var _this = this;
@@ -299,11 +318,17 @@ export default {
                 this.userRegistration.language = this.$i18n.locale;
                this.$axios.post(_this.apiIp +  '/login/register', this.userRegistration).then(function (response) {
                     if(response.status == 200) {
+                        if(response.data == "user_created_enter_code") {
+                            // Nutzer hat sich erfolgreich registriert und muss email code eingeben
+                            _this.enterEmailVerificationCode = true;
+                        } 
+                        
                         _this.registrationSuccsesText = response.data;
                         _this.registrationBlock = true;
 
                         _this.userLogin.username = _this.userRegistration.username;
                         _this.userLogin.password = _this.userRegistration.password;
+                        
                     }
                 }).catch(function (error) {
                     _this.registrationErrorText = error.response.data;

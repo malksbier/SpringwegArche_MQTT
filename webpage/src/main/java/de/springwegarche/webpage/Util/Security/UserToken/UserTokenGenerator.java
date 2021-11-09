@@ -3,13 +3,13 @@ package de.springwegarche.webpage.Util.Security.UserToken;
 import java.util.Random;
 
 public class UserTokenGenerator {
-    public static UserToken emailValidateUserToken () {
+    public static UserToken emailValidateUserToken (long userId) {
         // e for email
-        return new UserToken("E" + UserTokenGenerator.generateToken());
+        return new UserToken("E" + UserTokenGenerator.generateToken(), userId);
     }
-    public static UserToken passwordResetUserToken () {
+    public static UserToken passwordResetUserToken (long userId) {
         // p for password
-        return new UserToken("P" + UserTokenGenerator.generateToken());
+        return new UserToken("P" + UserTokenGenerator.generateToken(), userId);
     }
     private static String generateToken() {
         int leftLimit = 48; // numeral '0'

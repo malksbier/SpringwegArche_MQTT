@@ -14,6 +14,7 @@
     "username": "Nutzername",
     "password": "Passwort",
     "email": "E-Mail",
+    "emailVerificationCode": "Bestätigungscode",
     "sign_in" : "anmelden",
     "sign_out" : "abmelden",
     "do_registration" : "registrieren",
@@ -34,6 +35,8 @@
     "user_created": "Die Registirerung war erfolgreich.",
     "login_succesful" : "Login war erfolgreich",
     "login_unsuccesful" : "Login war nicht erfolgreich",
-    "error_todo": "unerwarteter Fehler"
+    "error_todo": "unerwarteter Fehler",
+    "user_created_enter_code": "Bitte bestätigen sie Ihre E-Mail",
+    "do_verification_email": "Code bestätigen"
 
 }

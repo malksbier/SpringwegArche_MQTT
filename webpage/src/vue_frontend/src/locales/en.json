@@ -14,6 +14,7 @@
   "username": "Username",
   "password": "Password",
   "email": "E-Mail",
+  "emailVerificationCode": "Verification Code",
   "sign_in" : "login",
   "sign_out" : "logout",
   "do_registration" : "register",
@@ -34,6 +35,8 @@
   "user_created": "The registration was succesful.",
   "login_succesful" : "The login was succesful",
   "login_unsuccesful" : "The login was not succesful",
-  "error_todo": "unexpected Error"
+  "error_todo": "unexpected Error",
+  "user_created_enter_code": "Please verify your E-Mail",
+  "do_verification_email": "confirm code"
 
 }

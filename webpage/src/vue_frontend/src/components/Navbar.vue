@@ -211,7 +211,7 @@ export default {
 
     data() {
         return {
-            apiIp: "http://192.168.2.105:8080",
+            apiIp: "http://localhost:8080",
 
             showNavigationDrawer: false,
             loginDialog: false,
@@ -229,6 +229,7 @@ export default {
                 username: "",
                 password: "",
                 email: "",
+                language: "",
             },
             userLogin: {
                 username: "",
@@ -295,6 +296,7 @@ export default {
                this.registrationErrorText = "";
                this.registrationSuccsesText = "";
 
+                this.userRegistration.language = this.$i18n.locale;
                this.$axios.post(_this.apiIp +  '/login/register', this.userRegistration).then(function (response) {
                     if(response.status == 200) {
                         _this.registrationSuccsesText = response.data;

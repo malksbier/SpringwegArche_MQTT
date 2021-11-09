@@ -20,8 +20,11 @@ import de.springwegarche.webpage.Models.DAO.AuthenticationRequest;
 import de.springwegarche.webpage.Models.DAO.AuthenticationResponse;
 import de.springwegarche.webpage.Models.DAO.RegisterRequest;
 import de.springwegarche.webpage.Util.WebResponses;
+import de.springwegarche.webpage.Util.Email.EmailSender;
 import de.springwegarche.webpage.Util.Security.JwtUtil;
 import de.springwegarche.webpage.Util.Security.SqlInjectionChecker;
+import de.springwegarche.webpage.Util.Security.UserToken.UserToken;
+import de.springwegarche.webpage.Util.Security.UserToken.UserTokenGenerator;
 
 @RestController
 public class AuthenicationController {
@@ -81,10 +84,21 @@ public class AuthenicationController {
             return WebResponses.badResponse("email_has_invalid_chars");
         }
 
+        UserToken token = UserTokenGenerator.emailValidateUserToken();
+        // Check validity of Email
+
+        try {
+            new EmailSender().sendValidateMail(registerRequest.getEmail(),token,registerRequest.getLanguage() == "de");
+        } catch (Exception e) {
+            System.out.println("could not send email: " + e.getMessage());
+            return WebResponses.badResponse("invalid_e-mail");
+        }
+
         final User user = new User(registerRequest.getUsername(),registerRequest.getUsername(),registerRequest.getEmail());
+        user.addToken(token);
         // create User
         userDetailsService.addUser(user);
 
-        return WebResponses.okResponse("user_created");
+        return WebResponses.okResponse("user_created_enter_code");
     }
 }

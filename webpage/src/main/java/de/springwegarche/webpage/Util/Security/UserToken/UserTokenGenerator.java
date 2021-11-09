@@ -1,14 +1,13 @@
 package de.springwegarche.webpage.Util.Security.UserToken;
 
-import java.nio.charset.Charset;
 import java.util.Random;
 
 public class UserTokenGenerator {
-    static UserToken emailValidateUserToken () {
+    public static UserToken emailValidateUserToken () {
         // e for email
         return new UserToken("E" + UserTokenGenerator.generateToken());
     }
-    static UserToken passwordResetUserToken () {
+    public static UserToken passwordResetUserToken () {
         // p for password
         return new UserToken("P" + UserTokenGenerator.generateToken());
     }

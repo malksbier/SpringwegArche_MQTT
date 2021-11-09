@@ -7,17 +7,27 @@ public class RegisterRequest {
     private String username;
     private String password;
     private String email;
+    private String language;
 
     
 
     public RegisterRequest() {
     }
 
-    public RegisterRequest(String username, String password, String email) {
+    public RegisterRequest(String username, String password, String email, String language) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.language = language;
     }
+
+    public String getLanguage() {
+        return this.language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    } 
 
     public String getEmail() {
         return this.email;

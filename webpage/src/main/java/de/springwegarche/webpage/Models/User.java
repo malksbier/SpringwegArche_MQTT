@@ -1,8 +1,10 @@
 package de.springwegarche.webpage.Models;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,10 +16,13 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import de.springwegarche.webpage.Util.Security.UserToken.UserToken;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -29,6 +34,30 @@ public class User implements UserDetails{
     private String username;
     private String email;
 
+    @OneToMany(mappedBy = "id")
+    private List<UserToken> tokens = new ArrayList<UserToken>();
+
+
+    
+
+    public List<UserToken> getTokens() {
+        return this.tokens;
+    }
+    public void addToken(UserToken token) {
+        this.tokens.add(token);
+    }
+
+    public void setTokens(List<UserToken> tokens) {
+        this.tokens = tokens;
+    }
+
+    public User(long id, String password, String username, String email, List<UserToken> tokens) {
+        this.id = id;
+        this.password = password;
+        this.username = username;
+        this.email = email;
+        this.tokens = tokens;
+    }
     public User(long id, String password, String username, String email) {
         this.id = id;
         this.password = password;
@@ -91,11 +120,6 @@ public class User implements UserDetails{
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public User id(long id) {
-        setId(id);
-        return this;
     }
 
     public User username(String username) {

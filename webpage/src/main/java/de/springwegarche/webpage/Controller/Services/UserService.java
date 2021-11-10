@@ -24,6 +24,9 @@ public class UserService implements UserDetailsService{
         // TODO get User from DB
         return userRepository.findByUsername(username);
     }
+    public int setToken(String token, String username) {
+        return userRepository.setUserToken(token, username);
+    }
     public void deleteUser(User user) {
         userRepository.delete(user);
     } 

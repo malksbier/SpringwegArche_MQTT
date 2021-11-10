@@ -37,6 +37,8 @@
   "login_unsuccesful" : "The login was not succesful",
   "error_todo": "unexpected Error",
   "user_created_enter_code": "Please verify your E-Mail",
-  "do_verification_email": "confirm code"
+  "do_verification_email": "confirm code",
+  "code_not_valid": "The verification code is wrong.",
+  "code_valid": "Your E-Mail is verified"
 
 }

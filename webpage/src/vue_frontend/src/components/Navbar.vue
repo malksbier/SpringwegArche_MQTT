@@ -162,6 +162,7 @@
 
                 <v-text-field
                     :label="$t('emailVerificationCode')"
+                    :disabled="enterEmailVerificationCodeDisabled"
                     v-if="enterEmailVerificationCode"
                     v-model="emailVerificationCode"
                 ></v-text-field>
@@ -183,8 +184,8 @@
                 <v-spacer></v-spacer>
                 <v-btn
                     v-if="enterEmailVerificationCode"
-                    light
-                    text
+                    :disabled="enterEmailVerificationCodeDisabled"
+                    dark
                     @click="verificateEmail()">
                         {{ $t("do_verification_email") }}
                 </v-btn>
@@ -239,6 +240,7 @@ export default {
             loginBlock: false,
 
             enterEmailVerificationCode: false,
+            enterEmailVerificationCodeDisabled: false,
             emailVerificationCode: "",
 
             userRegistration: {
@@ -250,6 +252,10 @@ export default {
             userLogin: {
                 username: "",
                 password: "",
+            },
+            userEmailVerificationCode: {
+                username: "",
+                code: "",
             },
 
             routes: [
@@ -263,7 +269,27 @@ export default {
             this.showNavigationDrawer = false;
         },
         verificateEmail() {
-            console.log("check email code: " + this.emailVerificationCode );
+            console.log("check email code: " + this.emailVerificationCode);
+            var code = this.emailVerificationCode.trim();
+
+            
+            this.userEmailVerificationCode.username = this.userRegistration.username;
+            this.userEmailVerificationCode.code = code;
+
+            var _this = this;
+
+            this.$axios.post(_this.apiIp + '/login/autheticateEmail', _this.userEmailVerificationCode).then(function (response) {
+                if(response.status == 200) {
+                    _this.registrationSuccsesText = response.data;
+                    _this.registrationErrorText = "";
+                    _this.enterEmailVerificationCodeDisabled = true;
+                    
+                    _this.userLogin.username = _this.userRegistration.username;
+                    _this.userLogin.password = _this.userRegistration.password;
+                }
+            }).catch(function (error) {
+                _this.registrationErrorText = error.response.data;
+            });
         },
         signIn(username, password) {
             var _this = this;
@@ -325,10 +351,6 @@ export default {
                         
                         _this.registrationSuccsesText = response.data;
                         _this.registrationBlock = true;
-
-                        _this.userLogin.username = _this.userRegistration.username;
-                        _this.userLogin.password = _this.userRegistration.password;
-                        
                     }
                 }).catch(function (error) {
                     _this.registrationErrorText = error.response.data;

@@ -23,7 +23,6 @@ import de.springwegarche.webpage.Models.DAO.RegisterRequest;
 import de.springwegarche.webpage.Util.WebResponses;
 import de.springwegarche.webpage.Util.Security.JwtUtil;
 import de.springwegarche.webpage.Util.Security.SqlInjectionChecker;
-import de.springwegarche.webpage.Util.Security.UserToken.UserToken;
 import de.springwegarche.webpage.Util.Security.UserToken.UserTokenGenerator;
 
 @RestController
@@ -92,12 +91,13 @@ public class AuthenicationController {
         userDetailsService.addUser(user);
         User newUser = userDetailsService.getUserByUsername(registerRequest.getUsername());
         
-        UserToken emailAuthToken = UserTokenGenerator.emailValidateUserToken(newUser.getId());
+        String emailAuthToken = UserTokenGenerator.generateEmailValidateUserToken();
+
+        userDetailsService.setToken(emailAuthToken, newUser.getUsername());
 
         // TODO sending email approve email
         // Try to send mail
-        System.out.println("[Email Approve Code] email:" + newUser.getEmail() + ", token: " + emailAuthToken.getToken());
-        
+        System.out.println("[Email Approve Code] email:" + newUser.getEmail() + ", token: " + emailAuthToken);
 
         return WebResponses.okResponse("user_created_enter_code");
     }
@@ -105,11 +105,15 @@ public class AuthenicationController {
     @RequestMapping(value = mainRoute + "/autheticateEmail", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenicationToken(@RequestBody EmailAuthenticationRequest emailAuthenticationRequest) throws Exception {
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(emailAuthenticationRequest.getUsername());
-        if(userDetails != null) {
-            
-            return WebResponses.okResponse("code_valid");
+        final User user = userDetailsService.getUserByUsername(emailAuthenticationRequest.getUsername());
+        if(user != null) {
+            if(user.getToken() != "") {
+                if(user.getToken().trim().equals(emailAuthenticationRequest.getCode().trim())) {
+                    userDetailsService.setToken(null, emailAuthenticationRequest.getUsername());
+                    return WebResponses.okResponse("code_valid");
+                }
+            }
         }
-        return WebResponses.unauthorizedResponse("code_not_valid");
+        return WebResponses.badResponse("code_not_valid");
     }
 }

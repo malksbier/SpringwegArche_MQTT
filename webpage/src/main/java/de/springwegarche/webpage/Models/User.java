@@ -28,16 +28,19 @@ public class User implements UserDetails{
     private long id;
     @Column(updatable = true, nullable = false)
     private String password;
-    @Column(updatable = false, unique = true)
+    @Column(updatable = false, unique = true, nullable = false)
     private String username;
     @Column(updatable = false, nullable = false)
     private String email;
+    @Column(updatable = true, nullable = true)
+    private String token;
 
-    public User(long id, String password, String username, String email) {
+    public User(long id, String password, String username, String email, String token) {
         this.id = id;
         this.password = password;
         this.username = username;
         this.email = email;
+        this.token = token;
     }
     public User(String password, String username, String email) {
         this.id = 0;
@@ -45,30 +48,23 @@ public class User implements UserDetails{
         this.username = username;
         this.email = email;
     }
-    public User(long id, String password, String username) {
-        this.id = id;
-        this.password = password;
-        this.username = username;
-        this.email = "";
-    }
-    public User(String password, String username) {
-        this.id = 0;
-        this.password = password;
-        this.username = username;
-        this.email = "";
-    }
+    public User() {}
 
     @Column(name = "email", nullable = false)
     public String getEmail() {
         return this.email;
     }
-
     
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public User() {
+    public String getToken() {
+        return this.token;
+    }
+    
+    public void setToken(String token) {
+        this.token = token;
     }
     
     public long getId() {
@@ -95,16 +91,6 @@ public class User implements UserDetails{
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public User username(String username) {
-        setUsername(username);
-        return this;
-    }
-
-    public User password(String password) {
-        setPassword(password);
-        return this;
     }
 
     @Override

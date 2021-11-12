@@ -120,13 +120,16 @@ public class AuthenicationController {
     }
     @RequestMapping(value = mainRoute + "/validatePasswordReset", method = RequestMethod.POST)
     public ResponseEntity<?> setPasswordResetToken(@RequestBody SetNewPasswordRequest newPasswordRequest) throws Exception {
+        if(newPasswordRequest.getNewPassword().length() < 6 ) { // TODO static min pw length
+            return WebResponses.badResponse("password_has_to_be_six_chars_long");
+        }
 
         final User user = userDetailsService.getUserByUsername(newPasswordRequest.getUsername());
         if(user != null) {
             if(user.getToken() != "") {
                 if(user.getToken().trim().equals(newPasswordRequest.getCode().trim())) {
                     userDetailsService.setToken(null, newPasswordRequest.getUsername()); 
-                    userDetailsService.setPassword(newPasswordRequest.getNewPassword(), newPasswordRequest.getUsername()); 
+                    int changed = userDetailsService.setPassword(newPasswordRequest.getNewPassword(), newPasswordRequest.getUsername());
                 }
                 return WebResponses.okResponse("code_valid_passwort_set");
             }
@@ -149,7 +152,7 @@ public class AuthenicationController {
     }
 
     private loginStates validateUserLogin(User user) {
-        if(user.getToken() == "") {
+        if(user.getToken() == "" || user.getToken() == null) {
             return loginStates.ALLOWED;
         } else if(user.getToken().startsWith("E")) {
             return loginStates.EMAIL_TOKEN;

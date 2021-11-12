@@ -118,11 +118,11 @@
             
             <v-card-actions class="pt-3">
                 <v-btn
-                    :disabled="enterPasswortResetCode"
+                    :disabled="enterPasswordResetVerificationCodeDisabled"
                     v-if="!enterPasswortResetCode"
                     light
                     text
-                    @click="enterPasswortResetCode = true; newPassword='';">
+                    @click="triggerPasswordReset();">
                         {{ $t("password_forget") }}
                 </v-btn>
                 <v-btn
@@ -298,6 +298,9 @@ export default {
                 username: "",
                 code: "",
             },
+            userPasswordResetInit: {
+                username: "",
+            },
             userPasswordReset: {
                 username: "",
                 code: "",
@@ -314,13 +317,55 @@ export default {
         hideNavigationDrawer() {
             this.showNavigationDrawer = false;
         },
+        triggerPasswordReset() {
+            
+                console.log("trigger password code: " + this.userLogin.username);
+
+                var _this = this;
+
+                this.userPasswordResetInit.username = this.userLogin.username;
+
+                this.$axios.post(_this.apiIp + '/login/triggerPasswordReset', _this.userPasswordResetInit).then(function (response) {
+                    if(response.status == 200) {
+                        _this.loginSuccsesText = response.data;
+                        _this.loginErrorText = "";
+
+                        _this.enterPasswortResetCode = true; _this.newPassword='';
+                        _this.enterPasswordResetVerificationCodeDisabled = false;
+                    }
+                }).catch(function (error) {
+                    _this.loginErrorText = error.response.data;
+                });
+            
+        },
         verificatePassword() {
             console.log("check password code: " + this.emailVerificationCode);
+            var code = this.passwordResetVerificationCode.trim();
+
+            this.userPasswordReset.username = this.userLogin.username;
+            this.userPasswordReset.code = code;
+            this.userPasswordReset.newPassword = this.newPassword
+
+            var _this = this;
+
+            this.$axios.post(_this.apiIp + '/login/validatePasswordReset', _this.userPasswordReset).then(function (response) {
+                if(response.status == 200) {
+                    _this.loginSuccsesText = response.data;
+                    _this.loginErrorText = "";
+                    _this.enterEmailVerificationCodeDisabled = true;
+                    
+                    _this.userLogin.password = _this.userPasswordReset.newPassword;
+                    _this.enterPasswordResetVerificationCodeDisabled = true;
+
+                    _this.enterPasswortResetCode = false;
+                }
+            }).catch(function (error) {
+                _this.loginErrorText = error.response.data;
+            });
         },
         verificateEmail() {
             console.log("check email code: " + this.emailVerificationCode);
             var code = this.emailVerificationCode.trim();
-
             
             this.userEmailVerificationCode.username = this.userRegistration.username;
             this.userEmailVerificationCode.code = code;
@@ -344,6 +389,7 @@ export default {
             if(this.enterPasswortResetCode) {
                 // reset to login if Pasword reset is activ
                 this.enterPasswortResetCode = false;
+                this.enterPasswordResetVerificationCodeDisabled = false;
             } else {
                 // true login
                 var _this = this;

@@ -76,11 +76,32 @@
 
                 <v-text-field
                 v-model="userLogin.password"
+                :disabled="enterPasswortResetCode"
                 required type="password" name="password" autocomplete="on"
                 :label="$t('password')" 
                 :rules="getPasswordRules()"
                 hide-details="auto"
                 ></v-text-field>
+
+                <div v-if="enterPasswortResetCode"> 
+                    <v-text-field
+                        v-model="newPassword"
+                        type="password" name="password" autocomplete="off"
+                        :disabled="enterPasswordResetVerificationCodeDisabled"
+                        required 
+                        :label="$t('new_password')" 
+                        :rules="getPasswordRules()"
+                        hide-details="auto"
+                    ></v-text-field>
+
+                    <v-text-field
+                        :label="$t('verificationCode')"
+                        :disabled="enterPasswordResetVerificationCodeDisabled"
+                        v-if="enterPasswortResetCode"
+                        v-model="passwordResetVerificationCode"
+                    ></v-text-field>
+                </div>
+                
 
                 <p v-if="loginErrorText" class="text-h6 pt-2 my-0 error--text">
                     <v-icon color="red lighten-2">fas fa-exclamation-triangle</v-icon>
@@ -96,12 +117,27 @@
             <v-spacer></v-spacer>
             
             <v-card-actions class="pt-3">
+                <v-btn
+                    :disabled="enterPasswortResetCode"
+                    v-if="!enterPasswortResetCode"
+                    light
+                    text
+                    @click="enterPasswortResetCode = true; newPassword='';">
+                        {{ $t("password_forget") }}
+                </v-btn>
+                <v-btn
+                    v-if="enterPasswortResetCode"
+                    :disabled="enterPasswordResetVerificationCodeDisabled"
+                    light text
+                    @click="verificatePassword()">
+                        {{ $t("do_verification") }}
+                </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn
                     :disabled="loginBlock"
                     light
                     text
-                    @click="loginDialog = false; registrationDialog = true;">
+                    @click="loginDialog = false; registrationDialog = true; enterPasswortResetCode=false;">
                         {{ $t("do_registration") }}
                 </v-btn>
                 <v-btn
@@ -161,9 +197,9 @@
                 ></v-text-field>
 
                 <v-text-field
-                    :label="$t('emailVerificationCode')"
-                    :disabled="enterEmailVerificationCodeDisabled"
+                    :label="$t('verificationCode')"
                     v-if="enterEmailVerificationCode"
+                    :disabled="enterEmailVerificationCodeDisabled"
                     v-model="emailVerificationCode"
                 ></v-text-field>
 
@@ -181,18 +217,17 @@
             <v-spacer></v-spacer>
             
             <v-card-actions class="pt-3">
-                <v-spacer></v-spacer>
                 <v-btn
                     v-if="enterEmailVerificationCode"
                     :disabled="enterEmailVerificationCodeDisabled"
-                    dark
+                    light text
                     @click="verificateEmail()">
-                        {{ $t("do_verification_email") }}
+                        {{ $t("do_verification") }}
                 </v-btn>
+                <v-spacer></v-spacer>
                 <v-btn
-                    light
-                    text
-                    @click=" registrationDialog= false; loginDialog = true;">
+                    light text
+                    @click="registrationDialog= false; loginDialog = true;">
                         {{ $t("do_login") }}
                 </v-btn>
                 <v-btn
@@ -243,6 +278,12 @@ export default {
             enterEmailVerificationCodeDisabled: false,
             emailVerificationCode: "",
 
+            enterPasswortResetCode: false,
+            enterPasswordResetVerificationCodeDisabled: false,
+            passwordResetVerificationCode: "",
+            newPassword: "",
+
+
             userRegistration: {
                 username: "",
                 password: "",
@@ -257,6 +298,11 @@ export default {
                 username: "",
                 code: "",
             },
+            userPasswordReset: {
+                username: "",
+                code: "",
+                newPassword: "",
+            },
 
             routes: [
                 { title: 'main_page', icon: 'fas fa-home' ,path: "/"},
@@ -267,6 +313,9 @@ export default {
     methods: {
         hideNavigationDrawer() {
             this.showNavigationDrawer = false;
+        },
+        verificatePassword() {
+            console.log("check password code: " + this.emailVerificationCode);
         },
         verificateEmail() {
             console.log("check email code: " + this.emailVerificationCode);
@@ -292,47 +341,45 @@ export default {
             });
         },
         signIn(username, password) {
-            var _this = this;
+            if(this.enterPasswortResetCode) {
+                // reset to login if Pasword reset is activ
+                this.enterPasswortResetCode = false;
+            } else {
+                // true login
+                var _this = this;
  
-           if(this.loginValid) {
+                if(this.loginValid) {
 
-               this.loginErrorText = "";
-               this.loginSuccsesText = "";
+                    this.loginErrorText = "";
+                    this.loginSuccsesText = "";
 
-               this.$axios.post(_this.apiIp + '/login/autheticate', this.userLogin).then(function (response) {
-                    if(response.status == 200) {
-                        _this.loginSuccsesText = response.data;
+                    this.$axios.post(_this.apiIp + '/login/autheticate', this.userLogin).then(function (response) {
+                        if(response.status == 200) {
+                            _this.loginSuccsesText = response.data;
                         
-                        var data = response.data;
-                        const matches = [...data.matchAll(/'(.*?)'/g)];
-                        var jswToken = matches[0][1];
+                            var data = response.data;
+                            const matches = [...data.matchAll(/'(.*?)'/g)];
+                            var jswToken = matches[0][1];
 
-                        if(jswToken.startsWith("Bearer")) {
-                            _this.loginSuccsesText = "login_succesful";
+                            if(jswToken.startsWith("Bearer")) {
+                                _this.loginSuccsesText = "login_succesful";
 
-                            _this.loginBlock = true;
-                            _this.loginDialog = false;
+                                _this.loginBlock = true;
+                                _this.loginDialog = false;
 
-                            var myUser = jswToken;
-                            _this.$emit("update-user", myUser);
-                        } else {
-                            _this.loginErrorText = "login_unsuccesful";
+                                var myUser = jswToken;
+                                _this.$emit("update-user", myUser);
+                            } else {
+                                _this.loginErrorText = "login_unsuccesful";
+                            }
                         }
-
-                        
-
-                        
-                    }
-                }).catch(function (error) {
-                    _this.loginErrorText = error.response.data;
-                });
-
-               
-           } else {
-               this.loginErrorText = "missing_inputs"
-           }
-
-            
+                    }).catch(function (error) {
+                        _this.loginErrorText = error.response.data;
+                    });
+                } else {
+                    this.loginErrorText = "missing_inputs"
+                }
+            }
         },
         register() {
             var _this = this;
@@ -361,12 +408,7 @@ export default {
            }
         },
         signOut() {
-            this.userLogin.password = "";
-            this.userLogin.username = "";
-
-            this.loginBlock = false;
-
-            this.loginSuccsesText = "";
+            this.resetData();
 
             var myUser = 0;
             this.$emit("update-user", myUser);
@@ -398,6 +440,43 @@ export default {
                 value => !!value || this.$t("required"),
                 value => (value || '').length >= 6 || this.$t('min_6_characters')
             ];
+        },
+
+        resetData() {
+            this.loginDialog = false;
+            this.registrationDialog = false;
+            this.loginValid = false;
+            this.registrationValid = false;
+            this.loginErrorText = "";
+            this.registrationErrorText = "";
+            this.loginSuccsesText = "";
+            this.registrationSuccsesText = "";
+            this.registrationBlock = false;
+            this.loginBlock = false;
+
+            this.enterEmailVerificationCode = false;
+            this.enterEmailVerificationCodeDisabled = false;
+            this.emailVerificationCode = "";
+            this.enterPasswortResetCode = false,
+            this.enterPasswordResetVerificationCodeDisabled = false,
+            this.passwordResetVerificationCode = "",
+            this.newPassword = "",
+
+            this.userRegistration.username = "";
+            this.userRegistration.password = "";
+            this.userRegistration.email = "";
+            this.userRegistration.language = "";
+        
+            this.userLogin.username = "";
+            this.userLogin.password = "";
+        
+            this.userEmailVerificationCode.username = "";
+            this.userEmailVerificationCode.code = "";
+
+            this.userPasswordReset.username = "";
+            this.userPasswordReset.code = "";
+            this.userPasswordReset.newPassword = "";
+
         }
     }
 }

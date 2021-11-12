@@ -19,7 +19,9 @@ import de.springwegarche.webpage.Models.User;
 import de.springwegarche.webpage.Models.DAO.AuthenticationRequest;
 import de.springwegarche.webpage.Models.DAO.AuthenticationResponse;
 import de.springwegarche.webpage.Models.DAO.EmailAuthenticationRequest;
+import de.springwegarche.webpage.Models.DAO.PasswordForgetRequest;
 import de.springwegarche.webpage.Models.DAO.RegisterRequest;
+import de.springwegarche.webpage.Models.DAO.SetNewPasswordRequest;
 import de.springwegarche.webpage.Util.WebResponses;
 import de.springwegarche.webpage.Util.Security.JwtUtil;
 import de.springwegarche.webpage.Util.Security.SqlInjectionChecker;
@@ -116,4 +118,51 @@ public class AuthenicationController {
         }
         return WebResponses.badResponse("code_not_valid");
     }
+    @RequestMapping(value = mainRoute + "/validatePasswordReset", method = RequestMethod.POST)
+    public ResponseEntity<?> setPasswordResetToken(@RequestBody SetNewPasswordRequest newPasswordRequest) throws Exception {
+
+        final User user = userDetailsService.getUserByUsername(newPasswordRequest.getUsername());
+        if(user != null) {
+            if(user.getToken() != "") {
+                if(user.getToken().trim().equals(newPasswordRequest.getCode().trim())) {
+                    userDetailsService.setToken(null, newPasswordRequest.getUsername()); 
+                    userDetailsService.setPassword(newPasswordRequest.getNewPassword(), newPasswordRequest.getUsername()); 
+                }
+                return WebResponses.okResponse("code_valid_passwort_set");
+            }
+        }
+        return WebResponses.badResponse("code_not_valid");
+    }
+    @RequestMapping(value = mainRoute + "/triggerPasswordReset", method = RequestMethod.POST)
+    public ResponseEntity<?> triggerPasswordReset(@RequestBody PasswordForgetRequest passwordForgetRequest) throws Exception {
+
+        final User user = userDetailsService.getUserByUsername(passwordForgetRequest.getUsername());
+        if(user != null) {
+            if(validateUserLogin(user) == loginStates.ALLOWED) {
+                String pwResetToken = UserTokenGenerator.generatePasswordResetUserToken();
+                userDetailsService.setToken(pwResetToken, passwordForgetRequest.getUsername());
+                System.out.println("[Password Reset Code] email:" + user.getEmail() + ", token: " + pwResetToken);
+                return WebResponses.okResponse("password_reset_token_send");
+            }
+        } 
+        return WebResponses.badResponse("username_wrong");
+    }
+
+    private loginStates validateUserLogin(User user) {
+        if(user.getToken() == "") {
+            return loginStates.ALLOWED;
+        } else if(user.getToken().startsWith("E")) {
+            return loginStates.EMAIL_TOKEN;
+        } else if(user.getToken().startsWith("P")) {
+            return loginStates.PASSWORD_RESET_TOKEN;
+        } else {
+            return loginStates.ERROR;
+        }
+    }
+    private enum loginStates {
+        ALLOWED,
+        EMAIL_TOKEN,
+        PASSWORD_RESET_TOKEN,
+        ERROR
+      }
 }

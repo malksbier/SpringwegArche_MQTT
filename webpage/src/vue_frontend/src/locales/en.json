@@ -13,12 +13,14 @@
   "registration": "Register",
   "username": "Username",
   "password": "Password",
+  "new_password": "new Password",
   "email": "E-Mail",
-  "emailVerificationCode": "Verification Code",
+  "verificationCode": "Verification Code",
   "sign_in" : "login",
   "sign_out" : "logout",
   "do_registration" : "register",
   "do_login" : "login",
+  "password_forget" : "reset password",
   "required":"required",
   "min_6_characters":"at least 6 characters",
   "max_20_characters": "maximum 20 characters",
@@ -37,8 +39,10 @@
   "login_unsuccesful" : "The login was not succesful",
   "error_todo": "unexpected Error",
   "user_created_enter_code": "Please verify your E-Mail",
-  "do_verification_email": "confirm code",
+  "do_verification": "confirm code",
   "code_not_valid": "The verification code is wrong.",
-  "code_valid": "Your E-Mail is verified"
+  "code_valid": "Your E-Mail is verified",
+  "password_reset_token_send": "Please enter the verrification code sent to you",
+  "code_valid_passwort_set": "New password was set"
 
 }

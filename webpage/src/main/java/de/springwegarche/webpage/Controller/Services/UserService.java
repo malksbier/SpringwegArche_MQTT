@@ -27,6 +27,9 @@ public class UserService implements UserDetailsService{
     public int setToken(String token, String username) {
         return userRepository.setUserToken(token, username);
     }
+    public int setPassword(String password, String username) {
+        return userRepository.setUserPassword(password, username);
+    }
     public void deleteUser(User user) {
         userRepository.delete(user);
     } 

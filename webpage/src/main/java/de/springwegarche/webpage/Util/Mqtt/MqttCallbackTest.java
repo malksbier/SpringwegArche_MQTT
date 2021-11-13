@@ -6,11 +6,11 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class MqttCallbackTest implements MqttCallback{
-    private final String TAG = "MqttCallbackTest";
+    private final String TAG = "[MqttCallbackTest]";
 
     @Override
     public void connectionLost(Throwable er) {
-        System.out.println(TAG + ": lost Connection, " + er.getMessage());
+        System.out.println(TAG + " lost Connection, " + er.getMessage());
     }
 
     @Override

@@ -4,6 +4,7 @@ import de.springwegarche.webpage.Util.ConsolePrinter;
 
 public class MqttApplication extends Thread {
     private final String TAG = "[MqttApplication] ";
+    private final long LoopDelayMillis = 5000;
     private ConsolePrinter consolePrinter = new ConsolePrinter(true);
     private boolean running = true;
 
@@ -18,7 +19,7 @@ public class MqttApplication extends Thread {
     private void loop() throws InterruptedException {
         consolePrinter.println(TAG + "loop");
 
-        Thread.sleep(5000);
+        Thread.sleep(LoopDelayMillis);
     }
 
     public void run() {

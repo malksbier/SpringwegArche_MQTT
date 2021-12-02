@@ -1,18 +1,9 @@
 package de.springwegarche.webpage;
 
-import java.util.*;
-
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import de.springwegarche.webpage.Util.Mqtt.MqttApplication;
-import de.springwegarche.webpage.Util.Mqtt.MqttCallbackTest;
-import de.springwegarche.webpage.Util.Mqtt.MqttHelper;
 
 @SpringBootApplication
 public class WebpageApplication {

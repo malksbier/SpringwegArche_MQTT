@@ -8,13 +8,22 @@ import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import de.springwegarche.webpage.Util.ConsolePrinter;
+import de.springwegarche.webpage.Util.Mqtt.Util.ApplicationContextUtil;
 import de.springwegarche.webpage.Util.Mqtt.Util.InvalidTopicArrayList;
 import de.springwegarche.webpage.Util.Mqtt.Util.Database.Topic;
 import de.springwegarche.webpage.Util.Mqtt.Util.Serives.TopicsService;
 
 public class GetAllTopicsClient extends MqttAsyncClient{
+
+    @Autowired
+    TopicsService topicsService;
+
     private final String TAG = "[GetAllTopicsClient] ";
     private ConsolePrinter consolePrinter;
 
@@ -23,6 +32,8 @@ public class GetAllTopicsClient extends MqttAsyncClient{
     public GetAllTopicsClient(String serverURI, String clientId, ConsolePrinter printer) throws MqttException {
         super(serverURI, clientId);
 
+        ApplicationContext context = ApplicationContextUtil.getApplicationContext();
+        this.topicsService = context.getBean(TopicsService.class);
         this.consolePrinter = printer;
         topics = new InvalidTopicArrayList();
         
@@ -35,7 +46,7 @@ public class GetAllTopicsClient extends MqttAsyncClient{
 
     public void interpreteTopics() {
         if(topics.size() > 0) {
-            TopicsService.addAndCheckTopics(topics);
+            topicsService.addAndCheckTopics(topics);
             topics.clear();
         }
     }

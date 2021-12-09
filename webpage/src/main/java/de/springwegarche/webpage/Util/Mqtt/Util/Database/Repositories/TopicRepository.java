@@ -1,15 +1,21 @@
 package de.springwegarche.webpage.Util.Mqtt.Util.Database.Repositories;
 
-import javax.transaction.Transactional;
+import java.util.Collection;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import de.springwegarche.webpage.Util.Mqtt.Util.Database.Topic;
 
+@Repository
 public interface TopicRepository extends JpaRepository<Topic, Long>{
     Topic findById(long id);
+
+    // parent == null
+    @Query("select t from Topic t where parent_id IS NULL AND topic_name = ?1")
+    Collection<Topic> findFirstTopicWith(String topicName);
+
     /*
         User findByUsername(String username);
 

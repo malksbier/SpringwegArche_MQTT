@@ -12,32 +12,40 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "topic")
+@Table(name = "Topic")
 public class Topic{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)
     private long id;
     @Column(updatable = false, unique = false, nullable = false)
-    private String name;
+    private String topicName;
     @Column(updatable = false, unique = false, nullable = true)
     private long parent_id;
-    @Column(updatable = true, unique = false, nullable = false)
+    @Column(updatable = true, unique = false, nullable = true)
     private String info;
 
 
-    public Topic(String name, String info) {
-        this.name = name;
+    public Topic(String topicName, String info) {
+        this.topicName = topicName;
         this.info = info;
+    }
+    public Topic(String topicName) {
+        this.topicName = topicName;
     }
 
 
     public Topic() {
     }
 
-    public Topic(long id, String name, long parent_id, String info) {
+    public Topic(long id, String topicName, long parent_id, String info) {
         this.id = id;
-        this.name = name;
+        this.topicName = topicName;
+        this.parent_id = parent_id;
+        this.info = info;
+    }
+    public Topic(String topicName, long parent_id, String info) {
+        this.topicName = topicName;
         this.parent_id = parent_id;
         this.info = info;
     }
@@ -47,7 +55,7 @@ public class Topic{
     }
 
     public String getName() {
-        return this.name;
+        return this.topicName;
     }
 
     public long getParent_id() {
@@ -70,19 +78,19 @@ public class Topic{
             return false;
         }
         Topic topic = (Topic) o;
-        return id == topic.id && Objects.equals(name, topic.name) && parent_id == topic.parent_id && Objects.equals(info, topic.info);
+        return id == topic.id && Objects.equals(topicName, topic.topicName) && parent_id == topic.parent_id && Objects.equals(info, topic.info);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, parent_id, info);
+        return Objects.hash(id, topicName, parent_id, info);
     }
 
     @Override
     public String toString() {
         return "{" +
             " id='" + getId() + "'" +
-            ", name='" + getName() + "'" +
+            ", topicName='" + getName() + "'" +
             ", parent_id='" + getParent_id() + "'" +
             ", info='" + getInfo() + "'" +
             "}";

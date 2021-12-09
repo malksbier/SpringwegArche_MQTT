@@ -43,7 +43,7 @@ public class MqttApplication extends Thread {
 
     private void loop() throws InterruptedException {
         Thread.sleep(LoopDelayMillis);
-        consolePrinter.println(TAG + "loop");
+        //consolePrinter.println(TAG + "loop");
 
  
         GetAllTopicsClient getAll = (GetAllTopicsClient)mqttClients.get(0);

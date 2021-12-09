@@ -17,7 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 //@Inheritance(strategy = InheritanceType.JOINED)
-@Table(name = "user")
+@Table(name = "Users")
 public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

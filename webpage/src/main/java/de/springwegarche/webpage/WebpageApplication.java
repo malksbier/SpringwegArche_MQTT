@@ -1,17 +1,11 @@
 package de.springwegarche.webpage;
 
-import java.util.ArrayList;
-
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import de.springwegarche.webpage.Util.Mqtt.MqttApplication;
-import de.springwegarche.webpage.Util.Mqtt.MqttCallbackTest;
-import de.springwegarche.webpage.Util.Mqtt.MqttHelper;
+import de.springwegarche.webpage.Util.Mqtt.Util.Serives.TopicsService;
 
 @SpringBootApplication
 public class WebpageApplication {
@@ -20,7 +14,9 @@ public class WebpageApplication {
 
 	private static MqttApplication mqttApplication;
 	public static void main(String[] args) {
-		SpringApplication.run(WebpageApplication.class, args);
+		ConfigurableApplicationContext context = SpringApplication.run(WebpageApplication.class, args);
+		context.getBean(TopicsService.class);
+
 		mqttApplication = new MqttApplication();
 		mqttApplication.start();
 	}

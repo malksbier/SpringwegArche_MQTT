@@ -1,6 +1,7 @@
 package de.springwegarche.webpage.Util.Mqtt.Util.Database.Repositories;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,8 +14,8 @@ public interface TopicRepository extends JpaRepository<Topic, Long>{
     Topic findById(long id);
 
     // parent == null
-    @Query("select t from Topic t where parent_id IS NULL AND topic_name = ?1")
-    Collection<Topic> findFirstTopicWith(String topicName);
+    @Query("select t from Topic t where parent_id = 0 AND topic_name = ?1")
+    List<Topic> findFirstTopicWith(String topicName);
 
     /*
         User findByUsername(String username);

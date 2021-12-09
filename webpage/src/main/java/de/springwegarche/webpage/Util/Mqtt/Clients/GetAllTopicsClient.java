@@ -46,7 +46,7 @@ public class GetAllTopicsClient extends MqttAsyncClient{
 
     public void interpreteTopics() {
         if(topics.size() > 0) {
-            topicsService.addAndCheckTopics(topics);
+            topicsService.addAndCheckTopics(topics, consolePrinter);
             topics.clear();
         }
     }

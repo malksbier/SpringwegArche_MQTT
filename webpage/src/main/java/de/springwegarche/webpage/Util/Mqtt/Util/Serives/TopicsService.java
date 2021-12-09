@@ -2,12 +2,14 @@ package de.springwegarche.webpage.Util.Mqtt.Util.Serives;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder.In;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.springwegarche.webpage.Util.ConsolePrinter;
 import de.springwegarche.webpage.Util.Mqtt.Util.InvalidTopicArrayList;
 import de.springwegarche.webpage.Util.Mqtt.Util.Database.Topic;
 import de.springwegarche.webpage.Util.Mqtt.Util.Database.Repositories.TopicRepository;
@@ -15,6 +17,8 @@ import de.springwegarche.webpage.Util.Mqtt.Util.Database.Repositories.TopicRepos
 @Service
 public class TopicsService {
     final static String TAG = "[GetAllTopicsClient] ";
+    final static String SAFE_TAG = "[SAFE] ";
+    final static String ERROR_TAG = "[ERROR] ";
     final static String INFO_TOPIC = "info";
 
     @Autowired
@@ -24,7 +28,7 @@ public class TopicsService {
 
     }
 
-    public boolean addAndCheckTopics(InvalidTopicArrayList topics) {
+    public boolean addAndCheckTopics(InvalidTopicArrayList topics, ConsolePrinter console) {
         
         // splice strings
         for(int i=0;i<topics.size();i++) {
@@ -52,9 +56,9 @@ public class TopicsService {
 
             for(int j=0; j<splitTopics.size();j++) {
                 String topicString = splitTopics.get(j);
-                System.out.print(topicString + "    ");
+                console.print(topicString + "    ");
             }
-            System.out.println();
+            console.println("");
 
             // Check with DB
             for(int j=0; j<splitTopics.size();j++) {
@@ -63,10 +67,24 @@ public class TopicsService {
 
                     // first has no parent
                     if(j==0) {
+                        console.println(TAG + "first topic: " + splitTopics.get(j));
                         try {
-                            Collection<Topic> first = topicRepository.findFirstTopicWith(splitTopics.get(j));
+                            List<Topic> first = topicRepository.findFirstTopicWith(splitTopics.get(j));
+                            if(first.size() == 1) {
+                                console.println(TAG + "found first topic: " + splitTopics.get(j));
+                            } else if(first.size() < 1) {
+                                console.println(TAG + "not found first topic: " + splitTopics.get(j));
+
+                                console.println(TAG + SAFE_TAG + "first topic: " + splitTopics.get(j));
+                                topicRepository.save(new Topic(splitTopics.get(j)));
+                            } else {
+                                console.println(TAG + ERROR_TAG + "found to many of first topic: name: " + splitTopics.get(j) + ", count: " + first.size());
+
+                                //TODO remove to many main topics
+                            }
                         } catch (Exception e) {
-                            topicRepository.save(new Topic(splitTopics.get(j)));
+                            console.println(TAG + "first topic: " + splitTopics.get(j) + " has error");
+                            console.println(TAG + e.toString());
                         }
 
                         

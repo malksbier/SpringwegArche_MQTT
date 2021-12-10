@@ -35,33 +35,32 @@ public class TopicsService {
             Topic topic = topics.get(i);
 
             ArrayList<String> splitTopics = new ArrayList<String>();
-
+            
             String[] splitTopicsArray = topic.getName().split("/");
             for(int j=0; j<splitTopicsArray.length;j++) {
                 splitTopics.add(splitTopicsArray[j]);
             }
 
-            /*
+            
             for(int j=0; j<splitTopics.size();j++) {
                 String topicString = splitTopics.get(j);
                 System.out.print(topicString + "    ");
             }
             System.out.println();
-            */
+            
 
             // remove info tag
             if(splitTopics.get(splitTopics.size()-1).equals(INFO_TOPIC)) {
                 splitTopics.remove(splitTopics.size()-1);
             }
 
-            for(int j=0; j<splitTopics.size();j++) {
-                String topicString = splitTopics.get(j);
-                console.print(topicString + "    ");
-            }
-            console.println("");
-
+            long lastTopicId = 0;
             // Check with DB
             for(int j=0; j<splitTopics.size();j++) {
+
+                
+                
+                // if there is more then 1 topic in the list
                 if(j != splitTopics.size()-1) {
                     // Send Base Topics without Info
 
@@ -69,14 +68,16 @@ public class TopicsService {
                     if(j==0) {
                         console.println(TAG + "first topic: " + splitTopics.get(j));
                         try {
-                            List<Topic> first = topicRepository.findFirstTopicWith(splitTopics.get(j));
+                            List<Topic> first = topicRepository.findTopicWithNoParent(splitTopics.get(j));
                             if(first.size() == 1) {
                                 console.println(TAG + "found first topic: " + splitTopics.get(j));
+                                lastTopicId = first.get(0).getId();
                             } else if(first.size() < 1) {
                                 console.println(TAG + "not found first topic: " + splitTopics.get(j));
 
                                 console.println(TAG + SAFE_TAG + "first topic: " + splitTopics.get(j));
-                                topicRepository.save(new Topic(splitTopics.get(j)));
+                                Topic t = topicRepository.save(new Topic(splitTopics.get(j)));
+                                lastTopicId = t.getId();
                             } else {
                                 console.println(TAG + ERROR_TAG + "found to many of first topic: name: " + splitTopics.get(j) + ", count: " + first.size());
 
@@ -86,15 +87,46 @@ public class TopicsService {
                             console.println(TAG + "first topic: " + splitTopics.get(j) + " has error");
                             console.println(TAG + e.toString());
                         }
-
-                        
-                        //System.out.println(first.toString());
-
-                    } else {
-
                     }
-                } else {
-                    // Send Working Topic with Info
+                    // middle directories
+                    if(j < splitTopics.size() && j!=0) {
+                        console.println(TAG + "middle topic: " + splitTopics.get(j));
+
+                        List<Topic> middle = topicRepository.findTopic(splitTopics.get(j), lastTopicId);
+                        if(middle.size() == 1) {
+                            console.println(TAG + "found middle topic: " + splitTopics.get(j));
+                            lastTopicId = middle.get(0).getId();
+                        } else if(middle.size() < 1) {
+                            console.println(TAG + "not found middle topic: " + splitTopics.get(j));
+
+                            console.println(TAG + SAFE_TAG + "middle topic: " + splitTopics.get(j));
+                            Topic t = topicRepository.save(new Topic(splitTopics.get(j), lastTopicId));
+                            lastTopicId = t.getId();
+                        } else {
+                            console.println(TAG + ERROR_TAG + "found to many of middle topic: name: " + splitTopics.get(j) + ", count: " + middle.size());
+
+                            //TODO remove to many main topics
+                        }
+                    }
+                }
+                if(j == splitTopics.size() -1) {
+                    console.println(TAG + "last topic: " + splitTopics.get(j));
+
+                    List<Topic> last = topicRepository.findTopic(splitTopics.get(j), lastTopicId);
+                        if(last.size() == 1) {
+                            console.println(TAG + "found last topic: " + splitTopics.get(j));
+                            lastTopicId = last.get(0).getId();
+                        } else if(last.size() < 1) {
+                            console.println(TAG + "not found last topic: " + splitTopics.get(j));
+
+                            console.println(TAG + SAFE_TAG + "last topic: " + splitTopics.get(j));
+                            Topic t = topicRepository.save(new Topic(splitTopics.get(j), lastTopicId, topic.getInfo()));
+                            lastTopicId = t.getId();
+                        } else {
+                            console.println(TAG + ERROR_TAG + "found to many of last topic: name: " + splitTopics.get(j) + ", count: " + last.size());
+
+                            //TODO remove to many main topics
+                        }
                 }
             }
         }

@@ -23,6 +23,12 @@ public interface TopicRepository extends JpaRepository<Topic, Long>{
     @Query("select t from Topic t where topic_name = ?1 AND parent_id = ?2")
     List<Topic> findTopic(String topicName, long parentId);
 
+    @Query("select t from Topic t where parent_id = 0")
+    List<Topic> findAllTopicsWithNoParent();
+
+    @Query("select t from Topic t where parent_id = ?1")
+    List<Topic> findAllTopicsWithParentID(long id);
+
     /*
         User findByUsername(String username);
 

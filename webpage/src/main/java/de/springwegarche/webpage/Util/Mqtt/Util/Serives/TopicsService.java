@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.springwegarche.webpage.Util.ConsolePrinter;
+import de.springwegarche.webpage.Util.Mqtt.Models.DAO.InvertedTopic;
 import de.springwegarche.webpage.Util.Mqtt.Util.InvalidTopicArrayList;
 import de.springwegarche.webpage.Util.Mqtt.Util.Database.Topic;
 import de.springwegarche.webpage.Util.Mqtt.Util.Database.Repositories.TopicRepository;
@@ -27,9 +28,37 @@ public class TopicsService {
     public TopicsService() {
 
     }
+    public ArrayList<InvertedTopic> getAllTopicsInverted() {
+        ArrayList<InvertedTopic> result = new ArrayList<InvertedTopic>();
+
+        List<Topic> maintopics = topicRepository.findAllTopicsWithNoParent();
+        for(int i=0;i<maintopics.size();i++) {
+            Topic maintopic = maintopics.get(i);
+            InvertedTopic invertedTopic = new InvertedTopic(maintopic);
+            invertedTopic = getInvertedTopicsForInvertedTopic(invertedTopic);
+            result.add(invertedTopic);
+        }
+        
+        return result;
+    }
+
+    /**
+     * @param topic topic where to get the list for Topics from
+     * @return List of topics seen from main Topic 
+     */
+    private InvertedTopic getInvertedTopicsForInvertedTopic(InvertedTopic topic) {
+
+        List<Topic> subtopics = topicRepository.findAllTopicsWithParentID(topic.getId());
+        for(int i=0;i<subtopics.size();i++) {
+            Topic subSubTopic = subtopics.get(i);
+            InvertedTopic invertedTopic = new InvertedTopic(subSubTopic);
+            invertedTopic = getInvertedTopicsForInvertedTopic(invertedTopic);
+            topic.addChildren(invertedTopic);
+        }
+        return topic;
+    }
 
     public boolean addAndCheckTopics(InvalidTopicArrayList topics, ConsolePrinter console) {
-        
         // splice strings
         for(int i=0;i<topics.size();i++) {
             Topic topic = topics.get(i);

@@ -11,9 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import de.springwegarche.webpage.Util.Mqtt.Models.Interfaces.ITopic;
+
 @Entity
 @Table(name = "Topic")
-public class Topic{
+public class Topic extends ITopic{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false)

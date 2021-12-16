@@ -8,13 +8,19 @@
 <script>
 
 module.exports = {
+  props: {
+    user: {
+      required: true
+    },
+    mqttTopic: {
+      required: true
+    }
+  },
   mounted() {
     
   },
   data: function() {
-    return {
-      languageIsEnglish : true,
-    };
+  
   },
   methods: {
     

@@ -307,11 +307,24 @@ export default {
                 newPassword: "",
             },
 
-            routes: [
+            routesNotLogedIn: 
+            [
                 { title: 'main_page', icon: 'fas fa-home' ,path: "/"},
                 { title: 'about', icon: 'fas fa-address-card' ,path: "/about"},
-        ],
+            ],
+
+            routesLogedIn:
+            [
+                { title: 'main_page', icon: 'fas fa-home' ,path: "/"},
+                { title: 'mqtt_page', icon: 'fas fa-wrench' ,path: "/mqtt"},
+                { title: 'about', icon: 'fas fa-address-card' ,path: "/about"},
+            ],
+
+            routes: [],
         }
+    },
+    created: function () {
+        this.routes = this.routesNotLogedIn;
     },
     methods: {
         hideNavigationDrawer() {
@@ -413,6 +426,8 @@ export default {
                                 _this.loginBlock = true;
                                 _this.loginDialog = false;
 
+                                _this.routes = _this.routesLogedIn;
+
                                 var myUser = jswToken;
                                 _this.$emit("update-user", myUser);
                             } else {
@@ -455,6 +470,8 @@ export default {
         },
         signOut() {
             this.resetData();
+
+            this.routes = this.routesNotLogedIn;
 
             var myUser = 0;
             this.$emit("update-user", myUser);

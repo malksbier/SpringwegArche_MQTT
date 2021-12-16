@@ -1,3 +1,8 @@
+.root-page-element {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
 .v-list-item-same-height {
     max-height: 25px;
     min-height: 25px;

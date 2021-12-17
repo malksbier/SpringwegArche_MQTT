@@ -1,6 +1,9 @@
 .root-page-element {
-    margin-left: 20px;
+    margin-left: 50px;
     margin-right: 20px;
+}
+.main-content {
+    margin: 25px;
 }
 
 .v-list-item-same-height {

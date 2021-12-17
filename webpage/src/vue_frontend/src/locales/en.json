@@ -43,6 +43,9 @@
   "code_not_valid": "The verification code is wrong.",
   "code_valid": "Your E-Mail is verified",
   "password_reset_token_send": "Please enter the verrification code sent to you",
-  "code_valid_passwort_set": "New password was set"
+  "code_valid_passwort_set": "New password was set",
 
+  "mqtt_heading": "See all MQTT topics",
+  "on" : "On",
+  "off" : "Off"
 }

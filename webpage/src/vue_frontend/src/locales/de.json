@@ -43,5 +43,10 @@
     "code_not_valid": "Der Code ist falsch",
     "code_valid": "Deine E-Mail ist verifiziert",
     "password_reset_token_send": "Bitte bestätiegen Sie mit dem Token",
-    "code_valid_passwort_set": "Neues Passwort wurde gespeichert"
+    "code_valid_passwort_set": "Neues Passwort wurde gespeichert",
+
+    "mqtt_heading": "Alle MQTT Topics einsehen",
+    "on" : "An",
+    "off" : "Aus"
+
 }

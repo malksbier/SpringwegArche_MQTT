@@ -1,8 +1,9 @@
 <template>
   <div class="mqtt root-page-element">
-    <h1>mqtt</h1>
-    <div v-for="mqttTopic in mqttTopics.topics" :key = mqttTopic.id>
-        <MqttTopicRowDisplay :mqttTopic = mqttTopic :marginLeft = 0></MqttTopicRowDisplay>
+    <h1>{{ $t("mqtt_heading") }}</h1>
+    <p/>
+    <div class="main-content" v-for="mqttTopic in mqttTopics.topics" :key = mqttTopic.id>
+        <MqttTopicRowDisplay :mqttTopic = mqttTopic :parentMqttDirectory = emptyMqttTopicString></MqttTopicRowDisplay>
     </div>
   </div>
 </template>
@@ -16,6 +17,8 @@ import MqttTopicRowDisplay from '../components/MqttTopicRowDisplay.vue'
         data: () => ({
             mqttTopics : [],
             apiIp: "http://localhost:8080",
+
+            emptyMqttTopicString: "",
         }),
 
         created() {

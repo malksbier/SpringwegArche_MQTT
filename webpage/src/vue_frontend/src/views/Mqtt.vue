@@ -1,7 +1,9 @@
 <template>
   <div class="mqtt root-page-element">
     <h1>mqtt</h1>
-    <MqttTopicRowDisplay></MqttTopicRowDisplay>
+    <div v-for="mqttTopic in mqttTopics.topics" :key = mqttTopic.id>
+        <MqttTopicRowDisplay :mqttTopic = mqttTopic :marginLeft = 0></MqttTopicRowDisplay>
+    </div>
   </div>
 </template>
 
@@ -27,7 +29,7 @@ import MqttTopicRowDisplay from '../components/MqttTopicRowDisplay.vue'
                 this.$axios.get(_this.apiIp + '/mqtt/getAll', _this.userPasswordResetInit).then(function (response) {
                     if(response.status == 200) {
                         _this.mqttTopics = response.data;
-                        console.log(_this.mqttTopics)
+                        //console.log(JSON.stringify(_this.mqttTopics));
                     }
                 }).catch(function (error) {
                     console.log(error)

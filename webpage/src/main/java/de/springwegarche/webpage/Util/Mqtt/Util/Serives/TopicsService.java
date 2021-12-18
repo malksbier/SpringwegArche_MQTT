@@ -1,10 +1,7 @@
 package de.springwegarche.webpage.Util.Mqtt.Util.Serives;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder.In;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +25,31 @@ public class TopicsService {
     public TopicsService() {
 
     }
+    /**
+     * @param topicId
+     * Topic which value to set
+     * @return
+     */
+    public String getFullMqttTopicString(long topicId) {
+        String result = "";
+
+        long parentId = topicId;
+        while(parentId != 0) {
+            Topic t = topicRepository.getById(parentId);
+            result = t.getName() + "/" + result;
+
+            if(parentId != t.getParent_id()) {
+                parentId = t.getParent_id();
+            } else {
+                // the recived Topic is null and hasnt set the mainTopic.
+                parentId = 0;
+            }
+        }
+        
+        return result;
+    }
+
+
     public ArrayList<InvertedTopic> getAllTopicsInverted() {
         ArrayList<InvertedTopic> result = new ArrayList<InvertedTopic>();
 

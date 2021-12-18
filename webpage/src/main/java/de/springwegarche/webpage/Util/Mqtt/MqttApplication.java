@@ -1,7 +1,6 @@
 package de.springwegarche.webpage.Util.Mqtt;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 
@@ -43,7 +42,7 @@ public class MqttApplication extends Thread {
 
     private void loop() throws InterruptedException {
         Thread.sleep(LoopDelayMillis);
-        consolePrinter.println(TAG + "loop");
+        //consolePrinter.println(TAG + "loop");
 
  
         GetAllTopicsClient getAll = (GetAllTopicsClient)mqttClients.get(0);

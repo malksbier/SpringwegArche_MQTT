@@ -18,11 +18,11 @@
       <div v-if="mqttTopic.info != null" class="padding-in-row-big"> 
         <div v-if="mqttTopic.info == 'ON/OFF' "> 
 
-            <v-btn rounded class="function-button"> 
+            <v-btn @click="sendMqttTopicStatus('ON')" rounded class="function-button"> 
                 <v-icon small style="color: rgb(0,255,0)" >fas fa-circle</v-icon>
                 <span class="padding-in-row">{{ $t("on") }}</span>
             </v-btn>
-            <v-btn rounded class="function-button padding-in-row"> 
+            <v-btn @click="sendMqttTopicStatus('OFF')" rounded class="function-button padding-in-row"> 
                 <v-icon small style="color: rgb(255,0,0)" >far fa-circle</v-icon>
                 <span class="padding-in-row">{{ $t("off") }}</span>
             </v-btn>
@@ -36,7 +36,7 @@
     
     <div v-if="displayChildren">
       <div v-for="mqttTop in mqttTopic.children" :key = mqttTop.id>
-        <MqttTopicRowDisplays :mqttTopic = mqttTop :parentMqttDirectory = mqttDirectory></MqttTopicRowDisplays>
+        <MqttTopicRowDisplays :mqttTopic = mqttTop></MqttTopicRowDisplays>
       </div>
     </div>
   </div>
@@ -48,34 +48,42 @@ export default {
   name: "MqttTopicRowDisplays",
   components: { MqttTopicRowDisplays },
   computed: {
-    style() {
-      return {
-          margin: this.marginLeft + "px 0px 0px 0px"
-        };
-    }
   },
   props: {
     mqttTopic: {
       required: true
     },
-    parentMqttDirectory: {
-      required: true
-    }
   },
 
   data() {
     return {
       displayChildren: true,
-      mqttDirectory: "",
+      apiIp: "http://localhost:8080",
+      request: {
+        id:0,
+        status:0,
+      },
     }
-  },
-  mounted() {
-    this.mqttDirectory = this.parentMqttDirectory + "/" + this.mqttTopic.topicName;
-    console.log(this.mqttDirectory);
   },
   methods: {
     toggleChildrenDisplay() {
       this.displayChildren = !this.displayChildren;
+    },
+    sendMqttTopicStatus(status) {
+      console.log("sending MQTT data: topic: " + this.mqttTopic.topicName + ", status: " + status);
+
+      var _this = this;
+
+      _this.request.id = _this.mqttTopic.id;
+      _this.request.status = status;
+
+      this.$axios.post(_this.apiIp + '/mqtt/postTopicStatus', _this.request).then(function (response) {
+        if(response.status == 200) {
+          console.log("send");
+        }
+        }).catch(function (error) {
+          console.log(error.response.data);
+        });
     }
   }
 

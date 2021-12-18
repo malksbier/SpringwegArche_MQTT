@@ -1,7 +1,5 @@
 package de.springwegarche.webpage.Util.Mqtt.Clients;
 
-import java.util.ArrayList;
-
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
@@ -10,8 +8,6 @@ import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import de.springwegarche.webpage.Util.ConsolePrinter;
 import de.springwegarche.webpage.Util.Mqtt.Util.ApplicationContextUtil;

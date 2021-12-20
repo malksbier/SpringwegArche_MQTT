@@ -4,4 +4,5 @@ public class ITopic {
     long id;
     String topicName = "";
     String info = "";
+    String nameSetByUser;
 }

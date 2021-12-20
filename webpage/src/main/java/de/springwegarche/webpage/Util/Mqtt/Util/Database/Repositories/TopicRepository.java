@@ -2,7 +2,10 @@ package de.springwegarche.webpage.Util.Mqtt.Util.Database.Repositories;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +30,11 @@ public interface TopicRepository extends JpaRepository<Topic, Long>{
 
     @Query("select t from Topic t where parent_id = ?1")
     List<Topic> findAllTopicsWithParentID(long id);
+
+    @Modifying
+    @Transactional
+    @Query("update Topic t set t.nameSetByUser = ?1 where t.id = ?2")
+    int updateNameSetByUser(String nameSetByUser, long id);
 
     /*
         User findByUsername(String username);

@@ -11,10 +11,11 @@ import de.springwegarche.webpage.Util.Mqtt.Models.DAO.InvertedTopic;
 import de.springwegarche.webpage.Util.Mqtt.Util.InvalidTopicArrayList;
 import de.springwegarche.webpage.Util.Mqtt.Util.Database.Topic;
 import de.springwegarche.webpage.Util.Mqtt.Util.Database.Repositories.TopicRepository;
+import de.springwegarche.webpage.Util.Security.SqlInjectionChecker;
 
 @Service
 public class TopicsService {
-    final static String TAG = "[GetAllTopicsClient] ";
+    final static String TAG = "[TopicsService] ";
     final static String SAFE_TAG = "[SAFE] ";
     final static String ERROR_TAG = "[ERROR] ";
     final static String INFO_TOPIC = "info";
@@ -24,6 +25,14 @@ public class TopicsService {
 
     public TopicsService() {
 
+    }
+
+    public boolean updateNameSetByUser(long topicId, String nameSetByUser) {
+        if(SqlInjectionChecker.isSafe(nameSetByUser)) {
+            topicRepository.updateNameSetByUser(nameSetByUser,topicId);
+            return true;
+        }
+        return false;
     }
     /**
      * @param topicId

@@ -1,9 +1,24 @@
 <template>
   <div class="mqtt-topic-row-display">
     <v-row>
-      <!-- Front -->
+      <!-- Front Change Name -->
       <v-icon style="height: 25px" class="black-icon" >fas fa-long-arrow-alt-right</v-icon>
-      <p class="padding-in-row"> {{mqttTopic.topicName}} </p>
+      <p class="padding-in-row"> {{mqttTopicName}} </p>
+      <v-button icon  v-ripple="false" @click="toggleShowNewNameInput();">
+        <v-icon x-small class="toggle-switch black-icon padding-in-row">fas fa-edit</v-icon>
+      </v-button>
+      <div class="set_name" v-if="showNewNameInput">
+        <v-row>
+          <v-text-field v-model="newName" dense solo></v-text-field>
+
+          <v-button icon v-ripple="false" @click="clearNewName();">
+            <v-icon small class="black-icon padding-in-row">fas fa-ban</v-icon>
+          </v-button>
+          <v-button icon v-ripple="false" @click="sendNewUsergivenName();">
+            <v-icon small class="black-icon padding-in-row">fas fa-paper-plane</v-icon>
+          </v-button>
+        </v-row>
+      </div>
       <!-- Toggle Buttons -->
       <div v-if="mqttTopic.children.length > 0" >
         <v-button icon  v-ripple="false" @click="toggleChildrenDisplay();" v-if="!displayChildren">
@@ -48,6 +63,13 @@ export default {
   name: "MqttTopicRowDisplays",
   components: { MqttTopicRowDisplays },
   computed: {
+    mqttTopicName() {
+      if(this.mqttTopic.nameSetByUser != "" && this.mqttTopic.nameSetByUser != null) {
+        return this.mqttTopic.nameSetByUser;
+      } else {
+        return this.mqttTopic.topicName;
+      }
+    }
   },
   props: {
     mqttTopic: {
@@ -58,16 +80,62 @@ export default {
   data() {
     return {
       displayChildren: true,
+      showNewNameInput: false,
+      newName: "",
+
       apiIp: "http://localhost:8080",
       request: {
         id:0,
         status:0,
       },
+      sendNameRequest: {
+        id: 0,
+        nameSetByUser: "",
+      } 
     }
   },
   methods: {
     toggleChildrenDisplay() {
       this.displayChildren = !this.displayChildren;
+    },
+    toggleShowNewNameInput() {
+      this.showNewNameInput = !this.showNewNameInput;
+    },
+    clearNewName() {
+      this.newName = "";
+
+      console.log("sending MQTT new Name: topic: " + this.mqttTopic.topicName + ", name: " + "null");
+
+      var _this = this;
+
+      _this.sendNameRequest.id = _this.mqttTopic.id;
+      _this.sendNameRequest.nameSetByUser = "";
+
+      this.$axios.post(_this.apiIp + '/mqtt/postNameSetByUser', _this.sendNameRequest).then(function (response) {
+        if(response.status == 200) {
+          console.log("send");
+          _this.mqttTopic.nameSetByUser = "";
+        }
+        }).catch(function (error) {
+          console.log(error.response.data);
+        });
+    },
+    sendNewUsergivenName() {
+      console.log("sending MQTT new Name: topic: " + this.mqttTopic.topicName + ", name: " + this.newName);
+
+      var _this = this;
+
+      _this.sendNameRequest.id = _this.mqttTopic.id;
+      _this.sendNameRequest.nameSetByUser = _this.newName;
+
+      this.$axios.post(_this.apiIp + '/mqtt/postNameSetByUser', _this.sendNameRequest).then(function (response) {
+        if(response.status == 200) {
+          console.log("send");
+          _this.mqttTopic.nameSetByUser = _this.newName;
+        }
+        }).catch(function (error) {
+          console.log(error.response.data);
+        });
     },
     sendMqttTopicStatus(status) {
       console.log("sending MQTT data: topic: " + this.mqttTopic.topicName + ", status: " + status);

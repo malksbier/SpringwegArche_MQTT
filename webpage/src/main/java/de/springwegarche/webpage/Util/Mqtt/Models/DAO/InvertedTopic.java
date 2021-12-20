@@ -11,19 +11,29 @@ public class InvertedTopic extends ITopic{
     private String topicName;
     private String info;
     private ArrayList<InvertedTopic> children;
+    private String nameSetByUser;
 
-    public InvertedTopic(long id, String topicName, String info, ArrayList<InvertedTopic> children) {
+
+    public InvertedTopic() {
+    }
+
+    public InvertedTopic(long id, String topicName, String info, ArrayList<InvertedTopic> children, String nameSetByUser) {
         this.id = id;
         this.topicName = topicName;
         this.info = info;
         this.children = children;
+        this.nameSetByUser = nameSetByUser;
     }
+    
+    
     public InvertedTopic(Topic topic) {
         this.id = topic.getId();
         this.topicName = topic.getName();
         this.info = topic.getInfo();
         this.children = new ArrayList<InvertedTopic>();
+        this.nameSetByUser = topic.getNameSetByUser();
     }
+
 
     public long getId() {
         return this.id;
@@ -54,6 +64,17 @@ public class InvertedTopic extends ITopic{
     }
     public void addChildren(InvertedTopic child) {
         this.children.add(child);
+    }
+    public void setChildren(ArrayList<InvertedTopic> children) {
+        this.children = children;
+    }
+
+    public String getNameSetByUser() {
+        return this.nameSetByUser;
+    }
+
+    public void setNameSetByUser(String nameSetByUser) {
+        this.nameSetByUser = nameSetByUser;
     }
 
     @Override

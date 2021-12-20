@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import de.springwegarche.webpage.Models.DAO.MqttDirectoryResponse;
 import de.springwegarche.webpage.Util.WebResponses;
 import de.springwegarche.webpage.Util.Mqtt.Models.DAO.InvertedTopic;
+import de.springwegarche.webpage.Util.Mqtt.Models.DAO.NameSetByUserRequest;
 import de.springwegarche.webpage.Util.Mqtt.Models.DAO.TopicStatusRequest;
 import de.springwegarche.webpage.Util.Mqtt.Util.TopicWriter;
 import de.springwegarche.webpage.Util.Mqtt.Util.Serives.TopicsService;
@@ -46,5 +47,14 @@ public class MqttController {
 
         return WebResponses.okResponse("good");
     }
+    @RequestMapping(value = mainRoute + "/postNameSetByUser", method = RequestMethod.POST)
+    public ResponseEntity<?> postNameSetByUser(@RequestBody NameSetByUserRequest request) throws Exception {
+
+        topicsService.updateNameSetByUser(request.getId(),request.getNameSetByUser());
+
+        return WebResponses.okResponse("good");
+    }
+    
+    
     
 }

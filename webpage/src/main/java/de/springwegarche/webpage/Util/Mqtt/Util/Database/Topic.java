@@ -24,6 +24,8 @@ public class Topic extends ITopic{
     private long parent_id;
     @Column(updatable = true, unique = false, nullable = true)
     private String info;
+    @Column(updatable = true, unique = false, nullable = true)
+    private String nameSetByUser;
 
 
     public Topic(String topicName, String info) {
@@ -43,11 +45,12 @@ public class Topic extends ITopic{
     public Topic() {
     }
 
-    public Topic(long id, String topicName, long parent_id, String info) {
+    public Topic(long id, String topicName, long parent_id, String info, String nameSetByUser) {
         this.id = id;
         this.topicName = topicName;
         this.parent_id = parent_id;
         this.info = info;
+        this.nameSetByUser = nameSetByUser;
     }
     public Topic(String topicName, long parent_id, String info) {
         this.topicName = topicName;
@@ -74,6 +77,32 @@ public class Topic extends ITopic{
     public String getInfo() {
         return this.info;
     }
+    
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getTopicName() {
+        return this.topicName;
+    }
+
+    public void setTopicName(String topicName) {
+        this.topicName = topicName;
+    }
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    public String getNameSetByUser() {
+        return this.nameSetByUser;
+    }
+
+    public void setNameSetByUser(String nameSetByUser) {
+        this.nameSetByUser = nameSetByUser;
+    }
+
+
+
 
     @Override
     public boolean equals(Object o) {

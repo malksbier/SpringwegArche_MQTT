@@ -15,6 +15,7 @@ import de.springwegarche.webpage.Models.DAO.MqttDirectoryResponse;
 import de.springwegarche.webpage.Util.WebResponses;
 import de.springwegarche.webpage.Util.Mqtt.Models.DAO.InvertedTopic;
 import de.springwegarche.webpage.Util.Mqtt.Models.DAO.TopicStatusRequest;
+import de.springwegarche.webpage.Util.Mqtt.Util.TopicWriter;
 import de.springwegarche.webpage.Util.Mqtt.Util.Serives.TopicsService;
 
 @RestController
@@ -41,7 +42,7 @@ public class MqttController {
         String fullTopic = topicsService.getFullMqttTopicString(request.getId());
         System.out.println(TAG + "writng to Topic: " + fullTopic + ", status: " + request.getStatus());
 
-        
+        TopicWriter.writeToTopic(fullTopic, request.getStatus(), 1, false);
 
         return WebResponses.okResponse("good");
     }

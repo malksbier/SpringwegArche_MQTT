@@ -45,6 +45,10 @@ public class TopicsService {
                 parentId = 0;
             }
         }
+
+        if ((result != null) && (result.length() > 0)) {
+            result = result.substring(0, result.length() - 1);
+         }
         
         return result;
     }

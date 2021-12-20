@@ -13,8 +13,8 @@ public class MqttApplication extends Thread {
     private ConsolePrinter consolePrinter = new ConsolePrinter(true);
     private boolean running = true;
 
-    private String serverURI = "tcp://springwegarche.de:1883";
-    private String clientId;
+    public static String serverURI = "tcp://springwegarche.de:1883";
+    public static String clientId = "MqttApplication";
 
     private ArrayList<MqttAsyncClient> mqttClients;
 
@@ -30,7 +30,6 @@ public class MqttApplication extends Thread {
         this.running = running;
     }
     private void starting() {
-        clientId = "MqttApplication";
         try {
             mqttClients.add(new GetAllTopicsClient(serverURI,clientId,consolePrinter));
         } catch (Exception e) {

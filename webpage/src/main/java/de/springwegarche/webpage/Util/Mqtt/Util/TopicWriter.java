@@ -8,7 +8,9 @@ import de.springwegarche.webpage.Util.Mqtt.MqttApplication;
 
 public class TopicWriter {
     public static void writeToTopic(String topic, String message, int qos, boolean retained) throws MqttPersistenceException, MqttException {
-        getClient().publish(topic, message.getBytes(), qos, retained);
+        MqttClient client = getClient();
+        client.publish(topic, message.getBytes(), qos, retained);
+        client.disconnect();
     }
     private static MqttClient getClient() throws MqttException {
         MqttClient client = new MqttClient(MqttApplication.serverURI, MqttApplication.clientId);

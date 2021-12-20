@@ -7,18 +7,6 @@
       <v-button icon  v-ripple="false" @click="toggleShowNewNameInput();">
         <v-icon x-small class="toggle-switch black-icon padding-in-row">fas fa-edit</v-icon>
       </v-button>
-      <div class="set_name" v-if="showNewNameInput">
-        <v-row>
-          <v-text-field v-model="newName" dense solo></v-text-field>
-
-          <v-button icon v-ripple="false" @click="clearNewName();">
-            <v-icon small class="black-icon padding-in-row">fas fa-ban</v-icon>
-          </v-button>
-          <v-button icon v-ripple="false" @click="sendNewUsergivenName();">
-            <v-icon small class="black-icon padding-in-row">fas fa-paper-plane</v-icon>
-          </v-button>
-        </v-row>
-      </div>
       <!-- Toggle Buttons -->
       <div v-if="mqttTopic.children.length > 0" >
         <v-button icon  v-ripple="false" @click="toggleChildrenDisplay();" v-if="!displayChildren">
@@ -34,11 +22,11 @@
         <div v-if="mqttTopic.info == 'ON/OFF' "> 
 
             <v-btn @click="sendMqttTopicStatus('ON')" rounded class="function-button"> 
-                <v-icon small style="color: rgb(0,255,0)" >fas fa-circle</v-icon>
+                <v-icon small style="color: rgb(0,255,0);" >fas fa-circle</v-icon>
                 <span class="padding-in-row">{{ $t("on") }}</span>
             </v-btn>
             <v-btn @click="sendMqttTopicStatus('OFF')" rounded class="function-button padding-in-row"> 
-                <v-icon small style="color: rgb(255,0,0)" >far fa-circle</v-icon>
+                <v-icon small style="color: rgb(255,0,0);" >far fa-circle</v-icon>
                 <span class="padding-in-row">{{ $t("off") }}</span>
             </v-btn>
         
@@ -47,6 +35,16 @@
         </div>
       </div>
       
+    </v-row>
+    <v-row v-if="showNewNameInput" style="margin: 0px 10px 0px 10px" align="stretch"> 
+          <v-text-field v-model="newName" dense solo style="max-width:200px"></v-text-field>
+
+          <v-button icon v-ripple="false" @click="clearNewName();">
+            <v-icon small class="black-icon padding-in-row" style="height: 60%">fas fa-ban</v-icon>
+          </v-button>
+          <v-button icon v-ripple="false" @click="sendNewUsergivenName();">
+            <v-icon small class="black-icon padding-in-row" style="height: 60%">fas fa-paper-plane</v-icon>
+          </v-button>
     </v-row>
     
     <div v-if="displayChildren">

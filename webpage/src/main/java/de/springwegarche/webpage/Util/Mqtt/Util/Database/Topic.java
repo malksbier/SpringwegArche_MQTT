@@ -35,7 +35,7 @@ public class Topic extends ITopic{
     public Topic(String topicName, long parent_id) {
         this.topicName = topicName;
         this.parent_id = parent_id;
-        System.out.println(parent_id);
+        //System.out.println(parent_id);
     }
     public Topic(String topicName) {
         this.topicName = topicName;

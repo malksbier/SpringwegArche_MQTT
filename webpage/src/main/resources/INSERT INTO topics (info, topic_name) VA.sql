@@ -6,4 +6,6 @@
 
 -- select * from topic where parent_id IS NULL AND topic_name = 'malksbier';
 
- DROP TABLE topic;
+-- DROP TABLE topic;
+
+CREATE DATABASE MqttControllerDB

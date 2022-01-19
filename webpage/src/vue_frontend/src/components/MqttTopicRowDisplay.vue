@@ -7,6 +7,10 @@
       <v-button icon  v-ripple="false" @click="toggleShowNewNameInput();">
         <v-icon x-small class="toggle-switch black-icon padding-in-row">fas fa-edit</v-icon>
       </v-button>
+      <!-- Select -->
+      <v-button v-if="mqttTopic.children.length == 0" icon  v-ripple="false" @click="copyTopic();">
+        <v-icon x-small class="toggle-switch black-icon padding-in-row">fas fa-copy</v-icon>
+      </v-button>
       <!-- Toggle Buttons -->
       <div v-if="mqttTopic.children.length > 0" >
         <v-button icon  v-ripple="false" @click="toggleChildrenDisplay();" v-if="!displayChildren">
@@ -93,6 +97,9 @@ export default {
     }
   },
   methods: {
+    copyTopic() {
+      navigator.clipboard.writeText(JSON.stringify(this.mqttTopic ));
+    },
     toggleChildrenDisplay() {
       this.displayChildren = !this.displayChildren;
     },
@@ -113,6 +120,7 @@ export default {
         if(response.status == 200) {
           console.log("send");
           _this.mqttTopic.nameSetByUser = "";
+          _this.showNewNameInput = false;
         }
         }).catch(function (error) {
           console.log(error.response.data);
@@ -130,6 +138,7 @@ export default {
         if(response.status == 200) {
           console.log("send");
           _this.mqttTopic.nameSetByUser = _this.newName;
+          _this.showNewNameInput = false;
         }
         }).catch(function (error) {
           console.log(error.response.data);

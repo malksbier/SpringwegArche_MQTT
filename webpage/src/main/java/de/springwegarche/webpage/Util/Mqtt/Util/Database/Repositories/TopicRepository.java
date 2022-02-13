@@ -36,6 +36,15 @@ public interface TopicRepository extends JpaRepository<Topic, Long>{
     @Query("update Topic t set t.nameSetByUser = ?1 where t.id = ?2")
     int updateNameSetByUser(String nameSetByUser, long id);
 
+    @Modifying
+    @Transactional
+    @Query("update Topic t set t.start = ?1 where t.id = ?2")
+    int updateStart(String start, long id);
+    @Modifying
+    @Transactional
+    @Query("update Topic t set t.stop = ?1 where t.id = ?2")
+    int updateStop(String stop, long id);
+
     /*
         User findByUsername(String username);
 

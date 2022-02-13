@@ -12,19 +12,8 @@ public class InvertedTopic extends ITopic{
     private String info;
     private ArrayList<InvertedTopic> children;
     private String nameSetByUser;
-
-
-    public InvertedTopic() {
-    }
-
-    public InvertedTopic(long id, String topicName, String info, ArrayList<InvertedTopic> children, String nameSetByUser) {
-        this.id = id;
-        this.topicName = topicName;
-        this.info = info;
-        this.children = children;
-        this.nameSetByUser = nameSetByUser;
-    }
-    
+    private String start;
+    private String stop;
     
     public InvertedTopic(Topic topic) {
         this.id = topic.getId();
@@ -32,8 +21,27 @@ public class InvertedTopic extends ITopic{
         this.info = topic.getInfo();
         this.children = new ArrayList<InvertedTopic>();
         this.nameSetByUser = topic.getNameSetByUser();
+        this.start = topic.getStart();
+        this.stop = topic.getStop();
     }
 
+    public void addChildren(InvertedTopic invertedTopic) {
+        this.children.add(invertedTopic);
+    }
+
+
+    public InvertedTopic() {
+    }
+
+    public InvertedTopic(long id, String topicName, String info, ArrayList<InvertedTopic> children, String nameSetByUser, String start, String stop) {
+        this.id = id;
+        this.topicName = topicName;
+        this.info = info;
+        this.children = children;
+        this.nameSetByUser = nameSetByUser;
+        this.start = start;
+        this.stop = stop;
+    }
 
     public long getId() {
         return this.id;
@@ -62,9 +70,7 @@ public class InvertedTopic extends ITopic{
     public ArrayList<InvertedTopic> getChildren() {
         return this.children;
     }
-    public void addChildren(InvertedTopic child) {
-        this.children.add(child);
-    }
+
     public void setChildren(ArrayList<InvertedTopic> children) {
         this.children = children;
     }
@@ -77,6 +83,22 @@ public class InvertedTopic extends ITopic{
         this.nameSetByUser = nameSetByUser;
     }
 
+    public String getStart() {
+        return this.start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getStop() {
+        return this.stop;
+    }
+
+    public void setStop(String stop) {
+        this.stop = stop;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -85,12 +107,12 @@ public class InvertedTopic extends ITopic{
             return false;
         }
         InvertedTopic invertedTopic = (InvertedTopic) o;
-        return id == invertedTopic.id && Objects.equals(topicName, invertedTopic.topicName) && Objects.equals(info, invertedTopic.info) && Objects.equals(children, invertedTopic.children);
+        return id == invertedTopic.id && Objects.equals(topicName, invertedTopic.topicName) && Objects.equals(info, invertedTopic.info) && Objects.equals(children, invertedTopic.children) && Objects.equals(nameSetByUser, invertedTopic.nameSetByUser) && Objects.equals(start, invertedTopic.start) && Objects.equals(stop, invertedTopic.stop);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, topicName, info, children);
+        return Objects.hash(id, topicName, info, children, nameSetByUser, start, stop);
     }
 
     @Override
@@ -100,7 +122,18 @@ public class InvertedTopic extends ITopic{
             ", topicName='" + getTopicName() + "'" +
             ", info='" + getInfo() + "'" +
             ", children='" + getChildren() + "'" +
+            ", nameSetByUser='" + getNameSetByUser() + "'" +
+            ", start='" + getStart() + "'" +
+            ", stop='" + getStop() + "'" +
             "}";
     }
+
+
+   
+
+    
+  
+
+
 
 }

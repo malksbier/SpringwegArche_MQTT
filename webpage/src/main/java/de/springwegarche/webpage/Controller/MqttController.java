@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.springwegarche.webpage.Models.DAO.MqttDirectoryResponse;
+import de.springwegarche.webpage.Models.DAO.SetTimeRequest;
+import de.springwegarche.webpage.Util.TimeUtil;
 import de.springwegarche.webpage.Util.WebResponses;
 import de.springwegarche.webpage.Util.Mqtt.Models.DAO.InvertedTopic;
 import de.springwegarche.webpage.Util.Mqtt.Models.DAO.NameSetByUserRequest;
 import de.springwegarche.webpage.Util.Mqtt.Models.DAO.TopicStatusRequest;
 import de.springwegarche.webpage.Util.Mqtt.Util.TopicWriter;
+import de.springwegarche.webpage.Util.Mqtt.Util.Database.Topic;
 import de.springwegarche.webpage.Util.Mqtt.Util.Serives.TopicsService;
 
 @RestController
@@ -53,6 +56,40 @@ public class MqttController {
         topicsService.updateNameSetByUser(request.getId(),request.getNameSetByUser());
 
         return WebResponses.okResponse("good");
+    }
+    @RequestMapping(value = mainRoute + "/setTime", method = RequestMethod.POST)
+    public ResponseEntity<?> postSetTime(@RequestBody SetTimeRequest request) throws Exception {
+        
+        Topic topic = topicsService.getTopic(request.getId());
+        if(topic != null ) {
+            boolean startDone = false;
+            boolean stopDone = false;
+            // Check Input
+            if(TimeUtil.isValidTime(request.getStart())) {
+                startDone = topicsService.updateStart(request.getStart(), request.getId());
+            }
+            if(TimeUtil.isValidTime(request.getStop())) {
+                stopDone = topicsService.updateStop(request.getStop(), request.getId());
+            }
+
+            String responseText = "";
+            if(startDone) {
+                responseText += "Start";
+            }
+            if(stopDone) {
+                responseText += "Stop";
+            }
+
+            if(!responseText.isEmpty()) {
+                responseText = "updated" + responseText;
+                return WebResponses.okResponse(responseText);
+            } else {
+                return WebResponses.badResponse("nothingUpdated");
+            }
+
+        } else {
+            return WebResponses.badResponse("wrongTopicId");
+        }
     }
     
     

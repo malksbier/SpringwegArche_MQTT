@@ -23,8 +23,13 @@
       </div>
       <!-- Functions -->
       <div v-if="mqttTopic.info != null" class="padding-in-row-big"> 
+        <!-- On Off -->
         <div v-if="mqttTopic.info == 'ON/OFF' "> 
-
+            <!-- Time toggle-->
+            <v-button icon v-ripple="false" @click="toggleTimeDisplay();">
+              <v-icon x-small class="toggle-switch black-icon padding-in-row">fas fa-clock</v-icon>
+            </v-button>
+            <!-- Manual Buttons-->
             <v-btn @click="sendMqttTopicStatus('ON')" rounded class="function-button"> 
                 <v-icon small style="color: rgb(0,255,0);" >fas fa-circle</v-icon>
                 <span class="padding-in-row">{{ $t("on") }}</span>
@@ -33,9 +38,8 @@
                 <v-icon small style="color: rgb(255,0,0);" >far fa-circle</v-icon>
                 <span class="padding-in-row">{{ $t("off") }}</span>
             </v-btn>
-        
-          
-          
+
+            
         </div>
       </div>
       
@@ -50,6 +54,20 @@
             <v-icon small class="black-icon padding-in-row" style="height: 60%">fas fa-paper-plane</v-icon>
           </v-button>
     </v-row>
+    <v-row v-if="showTimeInput" style="margin: 0px 10px 0px 10px" align="stretch"> 
+
+          <div class="md-form mx-5 my-5">
+            <input type="time" id="inputMDEx1" class="form-control" v-model="timeStart">
+          </div>
+          <div class="md-form mx-5 my-5">
+            <input type="time" id="inputMDEx1" class="form-control" v-model="timeStop">
+          </div>
+          <v-button icon v-ripple="false" @click="sendTime();">
+            <v-icon small class="black-icon padding-in-row" style="height: 100%">fas fa-paper-plane</v-icon>
+          </v-button>
+    </v-row>
+
+    
     
     <div v-if="displayChildren">
       <div v-for="mqttTop in mqttTopic.children" :key = mqttTop.id>
@@ -83,7 +101,11 @@ export default {
     return {
       displayChildren: true,
       showNewNameInput: false,
+      showTimeInput: false,
       newName: "",
+
+      timeStart: "",
+      timeStop: "",
 
       apiIp: "http://localhost:8080",
       request: {
@@ -93,10 +115,41 @@ export default {
       sendNameRequest: {
         id: 0,
         nameSetByUser: "",
-      } 
+      },
+      sendTimeRequest: {
+        id: 0,
+        start: "",
+        stop: "",
+      }
     }
   },
+  mounted() {
+    this.timeStart = this.mqttTopic.start;
+    this.timeStop = this.mqttTopic.stop;
+  },
   methods: {
+    sendTime() {
+      console.log("sending MQTT Time: topic: " + this.mqttTopic.topicName + ", start: " + this.timeStart + ", stop: " + this.timeStop);
+
+      var _this = this;
+
+      this.sendTimeRequest.id = this.mqttTopic.id;
+      this.sendTimeRequest.start = this.timeStart;
+      this.sendTimeRequest.stop = this.timeStop;
+
+      this.$axios.post(_this.apiIp + '/mqtt/setTime', _this.sendTimeRequest).then(function (response) {
+        if(response.status == 200) {
+          console.log("send");
+          _this.showTimeInput = false;
+        }
+        }).catch(function (error) {
+          console.log(error.response.data);
+        });
+
+    },
+    toggleTimeDisplay() {
+      this.showTimeInput = !this.showTimeInput;
+    },
     copyTopic() {
       navigator.clipboard.writeText(JSON.stringify(this.mqttTopic ));
     },

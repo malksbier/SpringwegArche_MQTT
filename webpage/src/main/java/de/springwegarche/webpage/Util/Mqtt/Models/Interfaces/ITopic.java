@@ -5,4 +5,7 @@ public class ITopic {
     String topicName = "";
     String info = "";
     String nameSetByUser;
+
+    String start;
+    String stop;
 }

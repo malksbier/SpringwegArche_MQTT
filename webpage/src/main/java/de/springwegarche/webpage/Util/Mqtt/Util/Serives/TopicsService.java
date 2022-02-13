@@ -197,4 +197,15 @@ public class TopicsService {
         
         return true;
     }
+
+    public Topic getTopic(long id) {
+        return topicRepository.getById(id);
+    }
+
+    public boolean updateStart(String start, long id) {
+        return (topicRepository.updateStart(start, id) > 0);
+    }
+    public boolean updateStop(String stop, long id) {
+        return (topicRepository.updateStop(stop, id) > 0);
+    }
 }

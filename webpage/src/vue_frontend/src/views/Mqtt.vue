@@ -13,6 +13,7 @@
                     
                 </div>
             </div>
+            <!--
             <div class="col-xl-6">
                 <h1 class="pb-4">Regeln</h1>
 
@@ -20,6 +21,7 @@
                     <MqttRuleDisplay></MqttRuleDisplay>
                 </div>
             </div>
+            -->
         </div>
     </div>
 

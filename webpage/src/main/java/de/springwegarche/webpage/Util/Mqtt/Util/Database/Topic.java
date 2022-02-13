@@ -27,6 +27,11 @@ public class Topic extends ITopic{
     @Column(updatable = true, unique = false, nullable = true)
     private String nameSetByUser;
 
+    @Column(updatable = true, unique = false, nullable = true)
+    private String start;
+    @Column(updatable = true, unique = false, nullable = true)
+    private String stop;
+
 
     public Topic(String topicName, String info) {
         this.topicName = topicName;
@@ -102,7 +107,31 @@ public class Topic extends ITopic{
     }
 
 
+    public Topic(long id, String topicName, long parent_id, String info, String nameSetByUser, String start, String stop) {
+        this.id = id;
+        this.topicName = topicName;
+        this.parent_id = parent_id;
+        this.info = info;
+        this.nameSetByUser = nameSetByUser;
+        this.start = start;
+        this.stop = stop;
+    }
 
+    public String getStart() {
+        return this.start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getStop() {
+        return this.stop;
+    }
+
+    public void setStop(String stop) {
+        this.stop = stop;
+    }
 
     @Override
     public boolean equals(Object o) {

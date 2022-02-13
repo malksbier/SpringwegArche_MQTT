@@ -7,7 +7,7 @@
 <script>
 
 export default {
-  name: "MqttRuleDisplays",
+  name: "MqttRuleDisplay",
   computed: {
     
   },

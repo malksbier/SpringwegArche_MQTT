@@ -6,6 +6,7 @@ import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 
 import de.springwegarche.webpage.Util.ConsolePrinter;
 import de.springwegarche.webpage.Util.Mqtt.Clients.GetAllTopicsClient;
+import de.springwegarche.webpage.Util.Mqtt.Clients.UpdateTopicsBasedOnTimeClient;
 
 public class MqttApplication extends Thread {
     private final String TAG = "[MqttApplication] ";
@@ -32,6 +33,7 @@ public class MqttApplication extends Thread {
     private void starting() {
         try {
             mqttClients.add(new GetAllTopicsClient(serverURI,clientId,consolePrinter));
+            mqttClients.add(new UpdateTopicsBasedOnTimeClient(serverURI,clientId,consolePrinter,0));
         } catch (Exception e) {
             consolePrinter.println(TAG + "failed starting");
             consolePrinter.println(TAG + e);
@@ -46,6 +48,10 @@ public class MqttApplication extends Thread {
  
         GetAllTopicsClient getAll = (GetAllTopicsClient)mqttClients.get(0);
         getAll.interpreteTopics();
+
+        UpdateTopicsBasedOnTimeClient time = (UpdateTopicsBasedOnTimeClient)mqttClients.get(1);
+        time.checkForChanges();
+        
     }
     public void run() {
         consolePrinter.println(TAG + "started");

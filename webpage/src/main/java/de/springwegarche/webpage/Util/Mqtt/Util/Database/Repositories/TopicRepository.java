@@ -45,6 +45,11 @@ public interface TopicRepository extends JpaRepository<Topic, Long>{
     @Query("update Topic t set t.stop = ?1 where t.id = ?2")
     int updateStop(String stop, long id);
 
+    @Query("select t from Topic t where t.start IS NOT NULL AND t.stop IS NOT NULL")
+    List<Topic> getAllWithTime();
+    
+
+
     /*
         User findByUsername(String username);
 

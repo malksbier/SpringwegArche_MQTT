@@ -3,6 +3,8 @@ package de.springwegarche.webpage.Util.Mqtt.Util.Serives;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,7 @@ import de.springwegarche.webpage.Util.Mqtt.Util.Database.Repositories.TopicRepos
 import de.springwegarche.webpage.Util.Security.SqlInjectionChecker;
 
 @Service
+@Transactional
 public class TopicsService {
     final static String TAG = "[TopicsService] ";
     final static String SAFE_TAG = "[SAFE] ";
@@ -207,5 +210,9 @@ public class TopicsService {
     }
     public boolean updateStop(String stop, long id) {
         return (topicRepository.updateStop(stop, id) > 0);
+    }
+
+    public List<Topic> getAllTopicsWithTime() {
+        return topicRepository.getAllWithTime();
     }
 }

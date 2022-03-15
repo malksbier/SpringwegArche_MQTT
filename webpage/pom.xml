@@ -12,6 +12,7 @@
 	<artifactId>webpage</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>webpage</name>
+    <packaging>jar</packaging>
 	<description>Webpage und MQTT Contoller</description>
 	<properties>
 		<java.version>11</java.version>

@@ -1,6 +1,7 @@
 package de.springwegarche.webpage.Util;
 
 public class TimeUtil {
+
     public static boolean isValidTime(String time) {
         if(time.length() == 5 && time.charAt(2) == ':') {
             if(isSingleNumber(time.charAt(0)) && isSingleNumber(time.charAt(1)) && isSingleNumber(time.charAt(3)) && isSingleNumber(time.charAt(4)) ) {

@@ -7,10 +7,11 @@ import org.eclipse.paho.client.mqttv3.MqttAsyncClient;
 import de.springwegarche.webpage.Util.ConsolePrinter;
 import de.springwegarche.webpage.Util.Mqtt.Clients.GetAllTopicsClient;
 import de.springwegarche.webpage.Util.Mqtt.Clients.UpdateTopicsBasedOnTimeClient;
+import de.springwegarche.webpage.Util.Mqtt.Util.TopicWriter;
 
 public class MqttApplication extends Thread {
     private final String TAG = "[MqttApplication] ";
-    private final long LoopDelayMillis = 5000;
+    private final long LoopDelayMillis = 0;
     private ConsolePrinter consolePrinter = new ConsolePrinter(true);
     private boolean running = true;
 
@@ -30,7 +31,7 @@ public class MqttApplication extends Thread {
     private void setRunning(boolean running) {
         this.running = running;
     }
-    private void starting() {
+    private void starting() { 
         try {
             mqttClients.add(new GetAllTopicsClient(serverURI,clientId,consolePrinter));
             mqttClients.add(new UpdateTopicsBasedOnTimeClient(serverURI,clientId,consolePrinter,0));
@@ -42,8 +43,11 @@ public class MqttApplication extends Thread {
     }
 
     private void loop() throws InterruptedException {
+       
         Thread.sleep(LoopDelayMillis);
+        
         //consolePrinter.println(TAG + "loop");
+      
 
  
         GetAllTopicsClient getAll = (GetAllTopicsClient)mqttClients.get(0);

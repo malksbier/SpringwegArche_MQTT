@@ -38,7 +38,7 @@ import MqttRuleDisplay from '../components/MqttRuleDisplay.vue'
 
         data: () => ({
             mqttTopics : [],
-            apiIp: "http://localhost:8080",
+            apiIp: "http://localhost:8082",
 
             emptyMqttTopicString: "",
         }),

@@ -67,9 +67,4 @@ public class SetTimeRequest {
             ", stop='" + getStop() + "'" +
             "}";
     }
-    
-
-    
-
-    
 }

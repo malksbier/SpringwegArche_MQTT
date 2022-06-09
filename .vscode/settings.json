@@ -13,6 +13,19 @@
             "database": "MqttControllerDB",
             "username": "MqttControllerAdmin",
             "password": "ALBA01"
+        },
+        {
+            "mysqlOptions": {
+                "authProtocol": "default"
+            },
+            "previewLimit": 50,
+            "server": "192.168.2.112",
+            "port": 3306,
+            "driver": "MariaDB",
+            "name": "Zuechter",
+            "database": "Zuechter",
+            "username": "ZuechterAdmin",
+            "password": "Ede2804"
         }
     ]
 }

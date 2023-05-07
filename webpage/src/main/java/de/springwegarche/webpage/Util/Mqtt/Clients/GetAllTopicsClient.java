@@ -35,6 +35,8 @@ public class GetAllTopicsClient extends MqttAsyncClient{
         
         this.setCallback(new GetAllTopicsClientCallback());
 
+        
+
         IMqttToken token = this.connect();
         token.waitForCompletion();
         this.subscribe("#", 2);

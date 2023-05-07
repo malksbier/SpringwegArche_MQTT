@@ -19,6 +19,8 @@ public class WebpageApplication {
 		ConfigurableApplicationContext context = SpringApplication.run(WebpageApplication.class, args);
 		context.getBean(TopicsService.class);
 
+		
+/* 
 		while(true) {
 			BlingThread start = new BlingThread("malksbier/Anton´s Zimmer/Terrarien/Allgemein/relais/8", true);
 			BlingThread stopU = new BlingThread("malksbier/Anton´s Zimmer/Terrarien/Allgemein/relais/7", false);
@@ -32,7 +34,7 @@ public class WebpageApplication {
 			Thread.sleep(200);
 
 		}
-/* 
+
 		try {int x=0;
             while(true){
             

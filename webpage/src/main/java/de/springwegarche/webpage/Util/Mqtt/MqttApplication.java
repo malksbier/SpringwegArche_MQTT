@@ -11,11 +11,11 @@ import de.springwegarche.webpage.Util.Mqtt.Util.TopicWriter;
 
 public class MqttApplication extends Thread {
     private final String TAG = "[MqttApplication] ";
-    private final long LoopDelayMillis = 0;
+    private final long LoopDelayMillis = 50;
     private ConsolePrinter consolePrinter = new ConsolePrinter(true);
     private boolean running = true;
 
-    public static String serverURI = "tcp://springwegarche.de:1883";
+    public static String serverURI = "tcp://192.168.2.112:1883";
     public static String clientId = "MqttApplication";
 
     private ArrayList<MqttAsyncClient> mqttClients;
@@ -34,7 +34,7 @@ public class MqttApplication extends Thread {
     private void starting() { 
         try {
             mqttClients.add(new GetAllTopicsClient(serverURI,clientId,consolePrinter));
-            mqttClients.add(new UpdateTopicsBasedOnTimeClient(serverURI,clientId,consolePrinter,0));
+            //mqttClients.add(new UpdateTopicsBasedOnTimeClient(serverURI,clientId,consolePrinter,0));
         } catch (Exception e) {
             consolePrinter.println(TAG + "failed starting");
             consolePrinter.println(TAG + e);

@@ -1,0 +1,39 @@
+:root {
+    --main-bg-color: rgb(210,140,95);
+    --main-text-bg-color: rgb(240,230,220);
+    --default-margin: 20px
+}
+
+body{
+    background-color: var(--main-bg-color);
+}
+
+.router-container {
+    max-width: 960px;
+    margin: var(--default-margin);
+}
+
+.row{
+    margin-left: 0;
+    margin-right: 0;
+}
+
+
+#welcome_text {
+    letter-spacing: 5px;
+    font-variant: small-caps;
+}
+#nav{
+    width: -webkit-fill-available;
+    background-color: var(--main-text-bg-color);
+}
+
+.contained{
+    margin: 0;
+    padding: 0;
+    max-width: 100%;
+}
+
+.top-background {
+    position: fixed;
+}
